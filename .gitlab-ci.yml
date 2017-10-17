@@ -47,10 +47,17 @@ stages:
     TS_QN_BUCKET: 'lede-k3'
   script:
     - apt-get -qqy install tree
-    - echo '<pre>' > bin/index.html
-    - echo \<pre\>  > bin/index.html
+    - echo \<pre\> > bin/index.html
+    - echo 生成时间：$(date '+%Y-%m-%d %H:%M:%S') >> bin/index.html
+    - echo >> bin/index.html
+    - echo 快捷地址 >> bin/index.html
+    - echo /targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx >> bin/index.html
+    - echo /targets/bcm53xx/generic/sha256sums >> bin/index.html
+    - echo /targets/bcm53xx/generic/config.seed >> bin/index.html
+    - echo >> bin/index.html
+    - echo 目录结构 >> bin/index.html
     - tree -L 5 bin >> bin/index.html
-    - echo \</pre\>  >> bin/index.html
+    - echo \</pre\> >> bin/index.html
     - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
     - chmod a+x /bin/qshell
     - qshell account $QNAK $QNSK
