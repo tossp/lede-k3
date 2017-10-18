@@ -47,17 +47,22 @@ stages:
     TS_QN_BUCKET: 'lede-k3'
   script:
     - apt-get -qqy install tree
-    - echo \<pre\> > bin/index.html
-    - echo 生成时间：$(date '+%Y-%m-%d %H:%M:%S') >> bin/index.html
+    - echo '<img alt="持续集成状态" src="https://git.mc.app99.cn/zh/lede-k3/badges/ci/pipeline.svg"><br>' > bin/index.html
+    - echo '<div>项目地址</div><br>' >> bin/index.html
+    - echo '编译源码 <a href="https://github.com/tossp/lede-k3/commits/ci">https://github.com/tossp/lede-k3/commits/ci</a><br>' >> bin/index.html
+    - echo '引用源码 <a href="https://github.com/coolsnowwolf/lede">https://github.com/coolsnowwolf/lede</a><br>' >> bin/index.html
+    - echo '关键变更 <a href="https://github.com/tossp/lede-k3/commit/903513a315c9d202bc6c809ea0fcbc4b51df3dce#diff-0b8f8fc77bb0569fab1d87be78ee78ec">#diff-0b8f8fc77bb0569fab1d87be78ee78ec</a>' >> bin/index.html
+    - echo '<div>快捷地址</div><br>' >> bin/index.html
+    - echo '<a href="targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx">lede-bcm53xx-phicomm-k3-squashfs.trx下载</a><br>' >> bin/index.html
+    - echo '<a href="targets/bcm53xx/generic/sha256sums">sha256sums下载</a><br>' >> bin/index.html
+    - echo '<a href="targets/bcm53xx/generic/config.seed">config.seed下载</a><br>' >> bin/index.html
+    - echo '<pre>' >> bin/index.html
     - echo >> bin/index.html
-    - echo 快捷地址 >> bin/index.html
-    - echo /targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx >> bin/index.html
-    - echo /targets/bcm53xx/generic/sha256sums >> bin/index.html
-    - echo /targets/bcm53xx/generic/config.seed >> bin/index.html
+    - echo 生成时间：$(date '+%Y-%m-%d %H:%M:%S') >> bin/index.html
     - echo >> bin/index.html
     - echo 目录结构 >> bin/index.html
     - tree -L 5 bin >> bin/index.html
-    - echo \</pre\> >> bin/index.html
+    - echo '</pre>' >> bin/index.html
     - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
     - chmod a+x /bin/qshell
     - qshell account $QNAK $QNSK
