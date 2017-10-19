@@ -29,7 +29,7 @@ sed -i 's/\"services\"/\"nas\"/g' /usr/lib/lua/luci/controller/xunlei.lua
 
 [ ! -f /usr/bin/ip ] && ln -sf /sbin/ip /usr/bin/ip
 # opkg files ip-full -> /sbin/ip-full
-(opkg list-installed | grep ip-full >/dev/null 2>&1)  && ln -sf /sbin/ip-full /usr/bin/ip
+[ -f /sbin/ip-full ]  && ln -sf /sbin/ip-full /usr/bin/ip
 
 rm -rf /tmp/luci-modulecache/
 rm -f /tmp/luci-indexcache
@@ -48,12 +48,11 @@ sed -i '/option disabled/d' /etc/config/wireless
 sed -i '/set wireless.radio${devidx}.disabled/d' /lib/wifi/mac80211.sh
 wifi up
 
-# sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
-# echo "DISTRIB_REVISION='R7.4.2 By Lean'" >> /etc/openwrt_release
-# sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
-# echo "DISTRIB_DESCRIPTION='LEDE 17.01.3'" >> /etc/openwrt_release
-echo "DISTRIB_REVISION_LEAN='R7.4.2 By Lean'" >> /etc/openwrt_release
-echo "DISTRIB_DESCRIPTION_LEAN='LEDE 17.01.3'" >> /etc/openwrt_release
+
+sed -i '/DISTRIB_REVISION/d' /etc/openwrt_release
+echo "DISTRIB_REVISION='R7.4.3 By Lean'" >> /etc/openwrt_release
+sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
+echo "DISTRIB_DESCRIPTION='LEDE 17.01.4'" >> /etc/openwrt_release
 
 [ -f /etc/init.d/frp ] && /etc/init.d/frp enable
 [ -f /etc/init.d/frp ] && /etc/init.d/frp start
