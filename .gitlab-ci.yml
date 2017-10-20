@@ -42,7 +42,7 @@ stages:
     - 构建编译
   environment:
     name: 'QN-OSS'
-    url: http://lede-k3.test.tossp.com
+    url: http://lede-k3.test.tossp.com/$CI_COMMIT_SHA/index.html
   variables:
     TS_QN_BUCKET: 'lede-k3'
   script:
