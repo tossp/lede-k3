@@ -61,6 +61,8 @@ stages:
     - echo >> bin/index.html
     - echo 生成时间：$(date '+%Y-%m-%d %H:%M:%S' -d '8 hours') >> bin/index.html
     - echo 版本标识：$CI_COMMIT_SHA >> bin/index.html
+    - echo 执行主机：$CI_RUNNER_DESCRIPTION >> bin/index.html
+    - echo 主机标签：$CI_RUNNER_TAGS >> bin/index.html
     - echo >> bin/index.html
     - echo 目录结构 >> bin/index.html
     - tree -L 5 bin/ >> bin/index.html
@@ -68,7 +70,7 @@ stages:
     - mkdir -p $CI_COMMIT_SHA
     - mv -f bin/* $CI_COMMIT_SHA
     - mv -f $CI_COMMIT_SHA bin/
-    - mv bin/$CI_COMMIT_SHA/index.html bin/   
+    - cp bin/$CI_COMMIT_SHA/index.html bin/   
     - "echo 'User-agent: *' > bin/robots.txt"
     - "echo 'Disallow: /' >> bin/robots.txt"
     - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
