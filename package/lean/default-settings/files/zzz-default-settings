@@ -51,8 +51,6 @@ echo "DISTRIB_REVISION='R7.4.3 By Lean'" >> /etc/openwrt_release
 sed -i '/DISTRIB_DESCRIPTION/d' /etc/openwrt_release
 echo "DISTRIB_DESCRIPTION='LEDE 17.01.4'" >> /etc/openwrt_release
 
-[ -f /etc/init.d/frp ] && /etc/init.d/frp enable
-[ -f /etc/init.d/frp ] && /etc/init.d/frp start
 [ -f /etc/init.d/softethervpnbridge ] && /etc/init.d/softethervpnbridge disable
 [ -f /etc/init.d/softethervpnbridge ] && /etc/init.d/softethervpnbridge stop
 [ -f /etc/init.d/softethervpnclient ] && /etc/init.d/softethervpnclient disable
