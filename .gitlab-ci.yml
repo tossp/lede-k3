@@ -32,7 +32,8 @@ stages:
     - chown -R lede ../
     - chown -R lede $HOME
     - chmod -R u+w ../
-    - sudo -u lede make -j$(nproc) V=1
+    - sudo -u lede make -j$(nproc) V=1    
+    - cp .config bin/config.txt
   only:
     - ci
      
