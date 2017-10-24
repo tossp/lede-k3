@@ -62,6 +62,7 @@ stages:
     - echo 目录结构 >> bin/index.html
     - tree -L 5 bin/ >> bin/index.html
     - echo '</pre>' >> bin/index.html
+    - echo '<div id="SOHUCS" sid="lede-k3" ></div>' >> bin/index.html
     - mkdir -p $CI_COMMIT_SHA
     - mv -f bin/* $CI_COMMIT_SHA
     - mv -f $CI_COMMIT_SHA bin/
