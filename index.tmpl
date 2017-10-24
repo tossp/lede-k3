@@ -1,15 +1,63 @@
-<head><meta charset="utf-8"><title>💯LEDE-K3发布页面👍</title><style>html{font-size: 12px;}div{font-size: 14px;}a:link {color: #376d06;text-decoration:underline;}a:hover{color: #03F;text-decoration:none;margin-top:1px;margin-left:1px;}a:active{color:#333;text-decoration:none;margin-top:1px;margin-left:1px;}a:visited {color:#376d06;text-decoration: overline;}</style></head>
+<html><head><meta charset="utf-8"><title>💯LEDE-K3发布页面👍</title><style>html{font-size: 12px;}h1{font-size: 16px;}h2{font-size: 14px;}a:link {color: #376d06;text-decoration:underline;}a:hover{color: #03F;text-decoration:none;margin-top:1px;margin-left:1px;}a:active{color:#333;text-decoration:none;margin-top:1px;margin-left:1px;}a:visited {color:#376d06;text-decoration: overline;}pre{box-sizing:border-box;overflow:auto;font-family:Menlo, Monaco, Consolas, 'Courier New', monospace;font-size:13px;padding:9.5px;margin-top:0px;margin-bottom:10px;line-height:1.42857;color:#333333;word-break:break-all;word-wrap:break-word;border:1px solid #CCCCCC;border-radius:4px;background-color:#F5F5F5;}</style></head><body>
 <a href="https://github.com/tossp/lede-k3/commits/ci"><img alt="持续集成状态" src="https://git.mc.app99.cn/zh/lede-k3/badges/ci/pipeline.svg"></a><br>
-<script type="text/javascript"> 
-(function(){ 
-if (localStorage && localStorage.last && Math && (Math.floor((new Date()).getTime()/1000)-localStorage.last)>60*30){localStorage.last=Math.floor((new Date()).getTime()/1000);location.reload(true);}localStorage.last=Math.floor((new Date()).getTime()/1000);
-var appid = 'cyth9qAMe'; var conf = 'prod_525bb6cee32f83978e2bc0233b92b41a'; var width = window.innerWidth || document.documentElement.clientWidth; 
-if (width < 960) {window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script>
-</script>
-<hr><div>广告</div><br>
-发布服务器每个月只有20GB😱的流量，通过 <a href="https://portal.qiniu.com/signup?code=3liz7u2di1h02" target="_blank"> 传送门🚪 </a>注册并实名认证后可以为服务器每个月添加5G的流量😀
-<hr><div>项目地址</div><br>
-📜编译源码 <a href="https://github.com/tossp/lede-k3/commits/ci"  target="_blank">https://github.com/tossp/lede-k3/commits/ci</a><br>
-📦引用源码 <a href="https://github.com/coolsnowwolf/lede"  target="_blank">https://github.com/coolsnowwolf/lede</a><br>
-📝关键变更 <a href="https://github.com/tossp/lede-k3/commit/903513a315c9d202bc6c809ea0fcbc4b51df3dce#diff-0b8f8fc77bb0569fab1d87be78ee78ec"  target="_blank">#diff-0b8f8fc77bb0569fab1d87be78ee78ec</a>
-<hr><div>🚩快捷地址</div><br>
+<hr><h1>📢广告</h1>
+<span>发布服务器每个月只有20GB😱流量，通过 <a href="https://portal.qiniu.com/signup?code=3liz7u2di1h02" target="_blank"> 传送门🚪 </a>注册并实名认证后可以为服务器每个月添加5G的流量😀</span>
+<hr><h1>🚩快捷地址</h1>
+<h2>编译清单</h2>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/sha256sums">下载sha256sums</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/config.seed">下载config.seed</a>
+<a href="CI_COMMIT_SHA/tree.txt" target="_blank">查看目录结构</a>
+<a href="CI_COMMIT_SHA/config.txt" target="_blank">查看编译配置</a>
+<h2>下载连接</h2>
+<div><b>斐讯(phicomm)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx">phicomm-k3-squashfs.trx</a>
+</div><br>
+<div><b>华硕(asus)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-asus-rt-ac68u-squashfs.trx">asus-rt-ac68u-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-asus-rt-ac87u-squashfs.trx">asus-rt-ac87u-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-asus-rt-n18u-squashfs.trx">asus-rt-n18u-squashfs.trx</a>
+</div>
+<div><b>巴法络(buffalo)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wxr-1900dhp-squashfs.trx">buffalo-wxr-1900dhp-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wzr-1750dhp-squashfs.trx">buffalo-wzr-1750dhp-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wzr-600dhp2-squashfs.trx">buffalo-wzr-600dhp2-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wzr-900dhp-squashfs.factory-DHP-EU.bin">buffalo-wzr-900dhp-squashfs.factory-DHP-EU.bin</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wzr-900dhp-squashfs.factory-DHP2-JP.bin">buffalo-wzr-900dhp-squashfs.factory-DHP2-JP.bin</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-buffalo-wzr-900dhp-squashfs.trx">buffalo-wzr-900dhp-squashfs.trx</a>
+</div>
+<div><b>友讯(dlink)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-dlink-dir-885l-squashfs.bin">dlink-dir-885l-squashfs.bin</a>
+</div>
+<div><b>网件(netgear)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-netgear-r6250-squashfs.chk">netgear-r6250-squashfs.chk</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-netgear-r6300-v2-squashfs.chk">netgear-r6300-v2-squashfs.chk</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-netgear-r7000-squashfs.chk">netgear-r7000-squashfs.chk</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-netgear-r7900-squashfs.chk">netgear-r7900-squashfs.chk</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-netgear-r8000-squashfs.chk">netgear-r8000-squashfs.chk</a>
+</div>
+<div><b>斐讯(phicomm)</b>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx">phicomm-k3-squashfs.trx</a>
+<a href="CI_COMMIT_SHA/targets/bcm53xx/generic/lede-bcm53xx-device-phicomm-k3.manifest" target="_blank">device-phicomm-k3.manifest</a>
+</div>
+<hr><h1>🛡编译信息</h1>
+<div>生成时间：<b>CI_BUILD_TIME</b></div>
+<div>版本标识：<b><a href="https://github.com/tossp/lede-k3/commit/CI_COMMIT_SHA" target="_blank">CI_COMMIT_SHA</a></b></div>
+<div>执行主机：<b>CI_RUNNER_DESCRIPTION</b></div>
+<div>主机标签：<b>CI_RUNNER_TAGS</b></div>
+<hr><h1>⚒自定义软件源配置</h1>
+<div>以下自定义软件源地址，复制到你的<a href="http://tsk3/cgi-bin/luci/admin/system/packages/ipkg" target="_blank">OPKG 配置</a>中。</div>
+<pre># add your custom package feeds here
+#
+# src/gz example_feed_name http://www.example.com/path/to/files
+
+src/gz ts_k3_core http://lede-k3.test.tossp.com/CI_COMMIT_SHA/targets/bcm53xx/generic/packages
+src/gz ts_k3_base http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/base
+src/gz ts_k3_luci http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/luci
+src/gz ts_k3_packages http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/packages
+src/gz ts_k3_routing http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/routing
+src/gz ts_k3_telephony http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/telephony</pre>
+<hr><h1>🌏项目说明</h1>
+编译源码📜 <a href="https://github.com/tossp/lede-k3/commits/ci" target="_blank">https://github.com/tossp/lede-k3/commits/ci</a><br>
+引用项目📦 <a href="https://github.com/coolsnowwolf/lede" target="_blank">https://github.com/coolsnowwolf/lede</a><br>
+关键变更📝 <a href="https://github.com/tossp/lede-k3/commit/903513a315c9d202bc6c809ea0fcbc4b51df3dce#diff-0b8f8fc77bb0569fab1d87be78ee78ec" target="_blank">#diff-0b8f8fc77bb0569fab1d87be78ee78ec</a>
+<div id="SOHUCS" sid="lede-k3" ></div><script type="text/javascript">(function(){if (localStorage && localStorage.last && Math && (Math.floor((new Date()).getTime()/1000)-localStorage.last)>60*30){localStorage.last=Math.floor((new Date()).getTime()/1000);location.reload(true);}localStorage.last=Math.floor((new Date()).getTime()/1000);var appid = 'cyth9qAMe'; var conf = 'prod_525bb6cee32f83978e2bc0233b92b41a'; var width = window.innerWidth || document.documentElement.clientWidth;if (width < 960) {window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){window.changyan.api.config({appid:appid,conf:conf})}); } })(); </script></body></html>

@@ -48,21 +48,13 @@ stages:
     TS_QN_BUCKET: 'lede-k3'
   script:
     - apt-get -qqy install tree
-    - cp index.tmpl bin/index.html
-    - echo '<a href="'$CI_COMMIT_SHA'/targets/bcm53xx/generic/lede-bcm53xx-phicomm-k3-squashfs.trx">lede-bcm53xx-phicomm-k3-squashfs.trx下载</a><br>' >> bin/index.html
-    - echo '<a href="'$CI_COMMIT_SHA'/targets/bcm53xx/generic/sha256sums">sha256sums下载</a><br>' >> bin/index.html
-    - echo '<a href="'$CI_COMMIT_SHA'/targets/bcm53xx/generic/config.seed">config.seed下载</a><br>' >> bin/index.html
-    - echo '<hr><pre>' >> bin/index.html
-    - echo >> bin/index.html
-    - echo 生成时间：$(date '+%Y-%m-%d %H:%M:%S' -d '8 hours') >> bin/index.html
-    - echo 版本标识：$CI_COMMIT_SHA >> bin/index.html
-    - echo 执行主机：$CI_RUNNER_DESCRIPTION >> bin/index.html
-    - echo 主机标签：$CI_RUNNER_TAGS >> bin/index.html
-    - echo >> bin/index.html
-    - echo 目录结构 >> bin/index.html
-    - tree -L 5 bin/ >> bin/index.html
-    - echo '</pre>' >> bin/index.html
-    - echo '<div id="SOHUCS" sid="lede-k3" ></div>' >> bin/index.html
+    - cp index.tmpl bin/index.html    
+    - tree -L 5 bin/ > bin/tree.txt
+    - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" bin/index.html
+    - sed -i "s/CI_RUNNER_DESCRIPTION/$CI_RUNNER_DESCRIPTION/g" bin/index.html
+    - sed -i "s/CI_RUNNER_TAGS/$CI_RUNNER_TAGS/g" bin/index.html
+    - sed -i "s/CI_BUILD_TIME/$TSTIME/g" bin/index.html
     - mkdir -p $CI_COMMIT_SHA
     - mv -f bin/* $CI_COMMIT_SHA
     - mv -f $CI_COMMIT_SHA bin/
