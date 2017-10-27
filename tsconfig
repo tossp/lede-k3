@@ -43,3 +43,5 @@ CONFIG_PACKAGE_kmod-usb-storage=m
 CONFIG_PACKAGE_kmod-usb-uhci=m
 CONFIG_PACKAGE_kmod-usb-ohci-pci=m
 CONFIG_PACKAGE_kmod-usb2-pci=m
+
+CONFIG_PACKAGE_kmod-ipt-nat6=m

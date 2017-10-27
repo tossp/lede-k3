@@ -48,7 +48,7 @@ stages:
     TS_QN_BUCKET: 'lede-k3'
   script:
     - apt-get -qqy install tree
-    - cp index.tmpl bin/index.html    
+    - cp index.tmpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
     - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" bin/index.html
@@ -68,4 +68,3 @@ stages:
     - cat /root/ts.log
   only:
     - ci
-    
