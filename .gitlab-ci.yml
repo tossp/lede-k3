@@ -17,8 +17,7 @@ stages:
     expire_in: 1 mos
     paths:
       - bin/
-  script:  
-    - apt-get -qqy install sudo bsdmainutils autoconf automake libtool
+  script:
     - mkdir -p /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir} 
     - chown -R lede /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
@@ -47,7 +46,6 @@ stages:
   variables:
     TS_QN_BUCKET: 'lede-k3'
   script:
-    - apt-get -qqy install tree
     - cp index.tmpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
