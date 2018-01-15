@@ -25,8 +25,8 @@ stages:
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build_dir build_dir
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
-    - rm -rf ./tmp/
-    - ./scripts/feeds clean -a
+    - make clean
+#    - ./scripts/feeds clean -a
     - ./scripts/feeds update -a 
     - ./scripts/feeds install -a
     - cp tsconfig .config
