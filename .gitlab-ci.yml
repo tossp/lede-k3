@@ -41,6 +41,7 @@ stages:
      
 七牛发布:
   stage: 部署阶段
+  retry: 2
   dependencies:
     - 构建编译
   environment:
