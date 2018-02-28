@@ -53,3 +53,6 @@ CONFIG_PACKAGE_kmod-input-evdev=m
 CONFIG_PACKAGE_kmod-usb-hid=m
 
 CONFIG_PACKAGE_autosamba=m
+CONFIG_PACKAGE_luci-app-samba4=y
+CONFIG_PACKAGE_luci-app-ssrserver-python=y
+CONFIG_PACKAGE_luci-app-xunlei=y
