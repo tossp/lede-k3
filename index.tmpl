@@ -8,11 +8,14 @@
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/config.seed">下载config.seed</a>
 <a href="/CI_COMMIT_SHA/tree.txt" target="_blank">查看目录结构</a>
 <a href="/CI_COMMIT_SHA/config.txt" target="_blank">查看编译配置</a>
-<h2>下载连接</h2>
+<h2>K3下载连接</h2>
 <div><b>斐讯(phicomm)</b>
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-phicomm-k3-squashfs.trx">phicomm-k3-squashfs.trx</a>
+<a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-device-phicomm-k3.manifest" target="_blank">device-phicomm-k3.manifest</a>
 </div><br>
+<h2>其他下载连接（未测试稳定性）</h2>
 <div><b>华硕(asus)</b>
+<a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-asus-rt-ac56u-squashfs.trx">asus-rt-ac56u-squashfs.trx</a>
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-asus-rt-ac68u-squashfs.trx">asus-rt-ac68u-squashfs.trx</a>
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-asus-rt-ac87u-squashfs.trx">asus-rt-ac87u-squashfs.trx</a>
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-asus-rt-n18u-squashfs.trx">asus-rt-n18u-squashfs.trx</a>
@@ -35,10 +38,6 @@
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-netgear-r7900-squashfs.chk">netgear-r7900-squashfs.chk</a>
 <a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-netgear-r8000-squashfs.chk">netgear-r8000-squashfs.chk</a>
 </div>
-<div><b>斐讯(phicomm)</b>
-<a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-phicomm-k3-squashfs.trx">phicomm-k3-squashfs.trx</a>
-<a href="/CI_COMMIT_SHA/targets/bcm53xx/generic/openwrt-bcm53xx-device-phicomm-k3.manifest" target="_blank">device-phicomm-k3.manifest</a>
-</div>
 <hr><h1>🛡编译信息</h1>
 <div>生成时间：<b>CI_BUILD_TIME</b></div>
 <div>版本标识：<b><a href="https://github.com/tossp/lede-k3/commit/CI_COMMIT_SHA" target="_blank">CI_COMMIT_SHA</a></b></div>
@@ -47,8 +46,6 @@
 <hr><h1>⚒自定义软件源配置</h1>
 <div>自定义软件源地址，复制到你的<a href="http://tsk3/cgi-bin/luci/admin/system/packages/ipkg#cbi-customfeedconf" target="_blank">OPKG 配置</a>中。</div>
 <pre># add your custom package feeds here
-#
-# src/gz example_feed_name http://www.example.com/path/to/files
 
 src/gz ts_k3_core http://lede-k3.test.tossp.com/CI_COMMIT_SHA/targets/bcm53xx/generic/packages
 src/gz ts_k3_base http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_cortex-a9/base
