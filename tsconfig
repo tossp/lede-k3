@@ -56,3 +56,6 @@ CONFIG_PACKAGE_autosamba=m
 CONFIG_PACKAGE_luci-app-samba4=y
 CONFIG_PACKAGE_luci-app-ssrserver-python=y
 CONFIG_PACKAGE_luci-app-xunlei=y
+CONFIG_PACKAGE_luci-app-hd-idle=y
+
+CONFIG_PACKAGE_netdata=y
