@@ -30,7 +30,7 @@ stages:
     - ./scripts/feeds update -a 
     - ./scripts/feeds install -a
     - cp tsconfig .config
-    - make defconfig
+    - make oldconfig
     - chown -R lede ../
     - chown -R lede $HOME
     - chmod -R u+w ../
