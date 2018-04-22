@@ -1,9 +1,5 @@
 image: tossp/lede:latest
 
-before_script:
-  - wget -O /etc/apt/sources.list http://mirrors.163.com/.help/sources.list.trusty
-  - apt-get -qqy update
-
 stages:
   - 测试阶段
   - 构建阶段
@@ -18,7 +14,6 @@ stages:
     paths:
       - bin/
   script:
-    - apt-get -qqy install help2man
     - mkdir -p /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
     - chown -R lede /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
@@ -27,13 +22,12 @@ stages:
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
 #    - make clean
 #    - ./scripts/feeds clean -a
-    - ./scripts/feeds update -a 
-    - ./scripts/feeds install -a
+    - sudo -u lede ./scripts/feeds update -a 
+    - sudo -u lede ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - chown -R lede ../
+    - chown -R lede ./
     - chown -R lede $HOME
-    - chmod -R u+w ../
     - sudo -u lede make -j$(nproc) V=1    
     - cp .config bin/config.txt
   only:
