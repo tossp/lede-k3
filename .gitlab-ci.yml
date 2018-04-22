@@ -22,12 +22,13 @@ stages:
     - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
 #    - make clean
 #    - ./scripts/feeds clean -a
-    - sudo -u lede ./scripts/feeds update -a 
-    - sudo -u lede ./scripts/feeds install -a
+    - ./scripts/feeds update -a 
+    - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - chown -R lede ./
+    - chown -R lede ../
     - chown -R lede $HOME
+    - chmod -R u+w ../
     - sudo -u lede make -j$(nproc) V=1    
     - cp .config bin/config.txt
   only:
