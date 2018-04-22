@@ -26,10 +26,10 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - chown -R lede ../
-    - chown -R lede $HOME
-    - chmod -R u+w ../
-    - sudo -u lede make -j$(nproc) V=1    
+#    - chown -R lede ../
+#    - chown -R lede $HOME
+#    - chmod -R u+w ../
+    - FORCE=1 make -j$(nproc) V=1    
     - cp .config bin/config.txt
   only:
     - ci
