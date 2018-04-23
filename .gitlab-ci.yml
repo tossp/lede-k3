@@ -34,8 +34,8 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    #- make -j$(nproc) V=1
-    #- cp .config bin/config.txt
+    - make -j$(nproc) V=1
+    - cp .config bin/config.txt
   only:
     - ci
      
@@ -67,4 +67,4 @@ stages:
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - cat /root/ts.log
   only:
-    - ci1
+    - ci
