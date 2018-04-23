@@ -6,7 +6,14 @@ stages:
   - 部署阶段
      
 构建编译:
-  stage: 构建阶段
+  stage: 构建阶段  
+  cache:
+    key: "$CI_JOB_STAGE-$CI_JOB_NAME"
+    paths:
+      - dl/
+      - feeds/
+      - build_dir/
+      - staging_dir/
   variables:
     FORCE_UNSAFE_CONFIGURE: 1
   artifacts:
@@ -27,8 +34,8 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - make -j$(nproc) V=1
-    - cp .config bin/config.txt
+    #- make -j$(nproc) V=1
+    #- cp .config bin/config.txt
   only:
     - ci
      
@@ -60,4 +67,4 @@ stages:
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - cat /root/ts.log
   only:
-    - ci
+    - ci1
