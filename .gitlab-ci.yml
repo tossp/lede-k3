@@ -27,8 +27,7 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    #- sudo -u lede make -j$(nproc) V=1    
-    - make -j1 V=1    
+    - make -j$(nproc) V=1
     - cp .config bin/config.txt
   only:
     - ci
