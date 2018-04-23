@@ -22,12 +22,12 @@ stages:
     paths:
       - bin/
   script:
-    - mkdir -p /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
-    - chown -R lede /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
-    - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
-    - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
-    - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build_dir build_dir
-    - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
+   # - mkdir -p /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
+   # - chown -R lede /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG
+   # - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
+   # - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
+   # - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build_dir build_dir
+   # - ln -s /cache/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
 #    - make clean
 #    - ./scripts/feeds clean -a
     - ./scripts/feeds update -a 
