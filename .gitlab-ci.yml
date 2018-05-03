@@ -31,7 +31,7 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - make -j2 V=1
+    - make -j$(nproc) V=1
     - cp -f key-build.pub /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/
     - cp -f key-build /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/
     - cp .config bin/config.txt
