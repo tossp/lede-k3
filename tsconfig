@@ -15,11 +15,6 @@ CONFIG_LUCI_LANG_zh-cn=y
 CONFIG_PACKAGE_luci-app-frpc=y
 CONFIG_PACKAGE_luci-theme-material=y
 
-#CONFIG_PACKAGE_luci-app-pptp-server=m
-#CONFIG_PACKAGE_luci-app-ipsec-vpnd=m
-#CONFIG_PACKAGE_luci-app-vsftpd=m
-#CONFIG_PACKAGE_luci-app-usb-printer=m
-
 CONFIG_PACKAGE_luci-app-kcptun=m
 CONFIG_PACKAGE_luci-app-zerotier=m
 
