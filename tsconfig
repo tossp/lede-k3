@@ -55,6 +55,7 @@ CONFIG_PACKAGE_uhttpd-mod-ubus=y
 #CONFIG_PACKAGE_autosamba=y
 CONFIG_PACKAGE_luci-app-samba4=y
 CONFIG_PACKAGE_luci-app-mwan3=y
+CONFIG_PACKAGE_luci-app-wifidog-ng=y
 #CONFIG_PACKAGE_shellinabox=y
 CONFIG_PACKAGE_nmap=y
 #v2ray
