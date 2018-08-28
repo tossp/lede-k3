@@ -15,7 +15,6 @@ stages:
     paths:
       - bin/
   script:
-    - apt-get install time
     - mkdir -p /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
    # - make clean
    # - ./scripts/feeds clean -a
