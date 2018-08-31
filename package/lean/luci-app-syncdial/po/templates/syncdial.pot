@@ -1,0 +1,25 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+msgid "Concurrent Redial"
+msgstr ""
+
+msgid "Create Virtual WAN Interfaces"
+msgstr ""
+
+msgid "Enable"
+msgstr ""
+
+msgid "Number of Virtual WAN Interface"
+msgstr ""
+
+msgid ""
+"Use Macvlan to create multi virtual WAN interfaces.<br />Current online "
+"interface: %s"
+msgstr ""
+
+msgid "Use Old Macvlan Frame to Create Interfaces"
+msgstr ""
+
+msgid "Virtual WAN"
+msgstr ""

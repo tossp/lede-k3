@@ -1,0 +1,29 @@
+#!/bin/sh
+[ -f /etc/config/syncdial ] && exit
+
+cat > /etc/config/mwan3 <<EOF
+config rule 'https'
+	option sticky '1'
+	option dest_port '443'
+	option proto 'tcp'
+	option use_policy 'balanced'
+
+config rule 'default_rule'
+	option dest_ip '0.0.0.0/0'
+	option use_policy 'balanced'
+
+config policy 'balanced'
+	option last_resort 'default'
+EOF
+
+touch /etc/config/syncdial
+
+uci -q batch <<-EOF >/dev/null
+	delete ucitrack.@syncdial[-1]
+	add ucitrack syncdial
+	set ucitrack.@syncdial[-1].exec='/bin/genwancfg'
+	commit ucitrack
+EOF
+
+rm -f /tmp/luci-indexcache
+exit 0

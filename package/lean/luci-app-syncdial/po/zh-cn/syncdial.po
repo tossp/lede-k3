@@ -1,0 +1,42 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Concurrent Redial"
+msgstr "重新并发拨号"
+
+msgid "Create Virtual WAN Interfaces"
+msgstr "创建虚拟 WAN 接口"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Number of Virtual WAN Interface"
+msgstr "虚拟 WAN 口的数量"
+
+msgid ""
+"Use Macvlan to create multi virtual WAN interfaces.<br />Current online "
+"interface: %s"
+msgstr "使用 Macvlan 创建来多个虚拟 WAN 接口<br /> 当前在线接口: %s"
+
+msgid "Use Old Macvlan Frame to Create Interfaces"
+msgstr "使用旧的 Macvlan 创建方式"
+
+msgid "Virtual WAN"
+msgstr "虚拟 WAN"
+
+#~ msgid "Enable Interface Offline Check"
+#~ msgstr "启用接口掉线检查"
+
+#~ msgid "Minimum Number of Online Interfaces"
+#~ msgstr "最小在线接口数量"
+
+#~ msgid "Redial Waiting Time"
+#~ msgstr "重拨等待时间"
+
+#~ msgid "Redial when the number of online interfaces is less than this value."
+#~ msgstr "如果在线接口数量小于这个值则重拨"
+
+#~ msgid ""
+#~ "When interfaces all offline, the waiting time(second) before next redial. "
+#~ "Minimum: 5 seconds"
+#~ msgstr "当接口全部下线时，下一次拨号前的等待时间（秒）。最小值: 5 秒"
