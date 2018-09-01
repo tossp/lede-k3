@@ -1,16 +1,25 @@
 --[[
 Sync Dial Luci configuration page.
-Copyright (C) 2015-2016 GuoGuo <gch981213@gmail.com>
-Copyright (C) 2017 Xingwang Liao <kuoruan@gmail.com>
+Copyright (C) 2015 GuoGuo <gch981213@gmail.com>
 ]]--
 
 module("luci.controller.syncdial", package.seeall)
 
 function index()
+	
 	if not nixio.fs.access("/etc/config/syncdial") then
 		return
 	end
 
-	entry({"admin", "network", "syncdial"}, cbi("syncdial/general"),
-		_("Virtual WAN")).dependent = true
+	local page
+	page = entry({"admin", "network", "syncdial"}, cbi("syncdial"), _("虚拟WAN"))
+	page.dependent = true
+
+	page = entry({"admin", "network", "macvlan_redial"}, call("redial"), nil)
+	page.leaf = true
+
+end
+
+function redial()
+	os.execute("killall -9 pppd")
 end
