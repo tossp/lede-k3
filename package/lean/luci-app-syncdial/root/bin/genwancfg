@@ -1,79 +1,66 @@
 #!/bin/sh
-# macvlan 及 PPPoE 拨号接口配置批量自动生成脚本
-# Copyright (C) 2015-2016 GuoGuo<gch981213@gmail.com>
-# Copyright (C) 2017 Xingwang Liao<kuoruan@gmail.com>
-
+#macvlan及PPPoE拨号接口配置批量自动生成脚本
+#Copyright (C) 2015 GuoGuo<gch981213@gmail.com>
 . /lib/functions.sh
 
-# 检测IP列表
-chk_ip_list="$(cat /tmp/resolv.conf.auto | grep nameserver | cut -d' ' -f2 | sort -u | tr '\n' ' ') 115.239.210.27 115.239.211.112 220.181.112.244 220.181.111.188 180.76.76.76 1.2.4.8 210.2.4.8 119.29.29.29 182.254.116.116 223.5.5.5 223.6.6.6 114.114.114.114 114.114.115.115"
+#检测IP列表
+chk_ip_list="$(cat /tmp/resolv.conf.auto | grep nameserver | cut -d' ' -f2 | sort -u | tr '\n' ' ') 115.239.210.27 115.239.211.112 220.181.112.244 220.181.111.188 114.114.114.114 114.114.115.115"
 fw_str="wan wan6"
 
-# 添加 MWAN 负载均衡相关配置
-# $1:接口名称
+#添加MWAN负载均衡相关配置
+#$1:接口名称
 mwan_cfg_add() {
-	# gen mwan3_interface
-	uci -q batch <<-EOF >/dev/null
-		set mwan3.${1}=interface
-		set mwan3.${1}.enabled=1
-		set mwan3.${1}.count=1
-		set mwan3.${1}.timeout=2
-		set mwan3.${1}.interval=5
-		set mwan3.${1}.down=3
-		set mwan3.${1}.up=2
-	EOF
-
-	for i in $chk_ip_list; do
+	#gen mwan3_interface
+	uci set mwan3.${1}=interface
+	uci set mwan3.${1}.enabled=1
+	uci set mwan3.${1}.count=1
+	uci set mwan3.${1}.timeout=2
+	uci set mwan3.${1}.interval=5
+	uci set mwan3.${1}.down=3
+	uci set mwan3.${1}.up=2
+	for i in $chk_ip_list
+	do
 		uci add_list mwan3.${1}.track_ip="$i"
 	done
-
-	uci -q batch <<-EOF >/dev/null
-		set mwan3.${1}.reliability=1
-		# gen mwan3_member
-		set mwan3.${1}_m1_w1=member
-		set mwan3.${1}_m1_w1.interface=${1}
-		set mwan3.${1}_m1_w1.metric=1
-		set mwan3.${1}_m1_w1.weight=1
-		# gen mwan3_policy
-		add_list mwan3.balanced.use_member=${1}_m1_w1
-	EOF
+	uci set mwan3.${1}.reliability=1
+	#gen mwan3_member
+	uci set mwan3.${1}_m1_w1=member
+	uci set mwan3.${1}_m1_w1.interface=${1}
+	uci set mwan3.${1}_m1_w1.metric=1
+	uci set mwan3.${1}_m1_w1.weight=1
+	#gen mwan3_policy
+	uci add_list mwan3.balanced.use_member=${1}_m1_w1
 }
 
-# 删除 MWAN 负载均衡相关配置
-# $1:接口名称
+#删除MWAN负载均衡相关配置
+#$1:接口名称
 mwan_cfg_del() {
-	uci -q batch <<-EOF >/dev/null
-		del mwan3.${1}
-		del mwan3.${1}_m1_w1
-		del_list mwan3.balanced.use_member=${1}_m1_w1
-	EOF
+	uci del mwan3.${1}
+	uci del mwan3.${1}_m1_w1
+	uci del_list mwan3.balanced.use_member=${1}_m1_w1
 }
 
-# 添加 macvlan 设备
-# $1:设虚拟备名称 $2:原始设备名称
+#添加macvlan设备
+#$1:设虚拟备名称 $2:原始设备名称
 macvlan_dev_add() {
-	uci -q batch <<-EOF >/dev/null
-		set network.macvlandev_${1}=device
-		set network.macvlandev_${1}.name=${1}
-		set network.macvlandev_${1}.ifname=${2}
-		set network.macvlandev_${1}.type=macvlan
-	EOF
+	uci set network.macvlandev_${1}=device
+	uci set network.macvlandev_${1}.name=${1}
+	uci set network.macvlandev_${1}.ifname=${2}
+	uci set network.macvlandev_${1}.type=macvlan
 }
 
-# 添加 PPPoE 接口
-# $1:接口名称 $2:设备名称 $3:账户 $4:密码 $5:网关跃点
+#添加PPPoE接口
+#$1:接口名称 $2:设备名称 $3:账户 $4:密码 $5:网关跃点
 pppoe_if_add() {
-	uci -q batch <<-EOF >/dev/null
-		# gen wan if
-		set network.${1}=interface
-		set network.${1}.ifname=${2}
-		set network.${1}.proto=pppoe
-		set network.${1}.username=${3}
-		set network.${1}.password=${4}
-		set network.${1}.metric=${5}
-		# gen firewall
-		fw_str="${fw_str} ${1}"
-	EOF
+	#gen wan if
+	uci set network.${1}=interface
+	uci set network.${1}.ifname=${2}
+	uci set network.${1}.proto=pppoe
+	uci set network.${1}.username=${3}
+	uci set network.${1}.password=${4}
+	uci set network.${1}.metric=${5}
+	#gen firewall
+	fw_str="${fw_str} ${1}"
 }
 
 apply_cfg() {
@@ -86,44 +73,42 @@ apply_cfg() {
 
 general_config_load() {
 	config_load 'syncdial'
-	config_get_bool enabled 'general' 'enabled' '0'
-	config_get_bool old_frame 'general' 'old_frame' '0'
-	if [ ."$enabled" = ."0" ]; then
-		echo "Disabled. Exit now."
+	config_get_bool enabled 'config' 'enabled'
+	config_get_bool old_frame 'config' 'old_frame'
+	[ $enabled -eq 0 ] && {
+		echo "Disabled.Exit now."
 		apply_cfg
 		exit 1
-	fi
-	config_get wannum 'general' 'wannum'
+	}
+	config_get wannum 'config' 'wannum'
 
 	config_load 'network'
 	config_get pppoe_user 'wan' 'username'
 	config_get pppoe_password 'wan' 'password'
-	pppoe_ifname="$(uci get network.wan.ifname)"
+	pppoe_ifname=$(uci get network.wan.ifname)
 }
 
 check_remove_device() {
 	local devcfg=${1}
-	[ "${devcfg::11}" = "macvlandev_" ] && uci del network.${devcfg}
+	[ ${devcfg::11} == 'macvlandev_' ] && uci del network.${devcfg}
 }
 
 check_remove_interface() {
 	local ifcfg=${1}
-	if [ "${ifcfg::4}" = "vwan" ]; then
-		uci -q batch <<-EOF >/dev/null
-			del network.${ifcfg}
-		EOF
-		mwan_cfg_del "${ifcfg}"
-	fi
+	[ ${ifcfg::4} == 'vwan' ] && {
+		uci del network.${ifcfg}
+		mwan_cfg_del ${ifcfg} 
+	}
 }
 
 general_config_remove() {
 	config_load network
 	config_foreach check_remove_device 'device'
 	config_foreach check_remove_interface 'interface'
-	if [ ."$(uci get network.wan.proto)" = ."none" ]; then
+	[ $(uci get network.wan.proto) == "none" ] && {
 		uci set network.wan.proto=pppoe
-	fi
-	mwan_cfg_del "wan"
+	}
+	mwan_cfg_del 'wan'
 	uci set firewall.@zone[1].network="wan wan6"
 }
 
@@ -132,23 +117,23 @@ general_config_remove
 general_config_load
 
 uci set network.wan.metric=40
-if [ ."$old_frame" = ."1" ]; then
+[ $old_frame -eq 1 ] && {
 	uci set network.wan.proto=none
-	ifname="$(uci get network.wan.ifname)"
-	for i in $(seq 1 $wannum); do
-		mac_str="$(cat /sys/class/net/${ifname}/address | awk -F ':' '{print $1":"$2":"$3":"$4":"$5}')"
-		mac_str="${mac_str}$(printf ":%x" $(expr 16 + $i))"
+	ifname=$(uci get network.wan.ifname)
+	for i in $(seq 1 $wannum)
+	do
 		ip link add link $ifname name macvlan$i type macvlan
-		ifconfig macvlan$i hw ether "$mac_str"
+		ifconfig macvlan$i hw ether $(echo $(cat /sys/class/net/$ifname/address|awk -F ":" '{print $1":"$2":"$3":"$4":"$5":" }')$(echo "" | awk -F ":" '{printf("%X\n", 16+i);}' i=$i))
 		ifconfig macvlan$i up
 	done
-fi
-[ ."$old_frame" = ."0" ] && mwan_cfg_add wan
+}
+[ $old_frame -eq 0 ] && mwan_cfg_add wan
 
-for i in $(seq 1 $wannum); do
-	[ ."$old_frame" = ."0" ] && macvlan_dev_add macvlan$i $pppoe_ifname
-	pppoe_if_add "vwan$i" "macvlan$i" "$pppoe_user" "$pppoe_password" $(expr 40 + $i)
-	mwan_cfg_add "vwan$i"
+for i in $(seq 1 $wannum)
+do
+	[ $old_frame -eq 0 ] && macvlan_dev_add macvlan$i $pppoe_ifname
+	pppoe_if_add vwan$i macvlan$i $pppoe_user $pppoe_password $((40+$i))
+	mwan_cfg_add vwan$i
 done
 
 uci set firewall.@zone[1].network="$fw_str"

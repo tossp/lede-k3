@@ -1,18 +1,16 @@
 #!/bin/sh
-
-if [ ."$(uci -q get syncdial.general.enabled)" = ."1" ] && \
-	[ ."$(uci -q get syncdial.general.old_frame)" = ."1" ] && \
+[ "$(uci get syncdial.config.enabled)" = "1" ] && \
+	[ "$(uci get syncdial.config.old_frame)" = "1" ] && \
 	[ "$DEVICE" = "$(uci get network.wan.ifname)" ] && \
-	[ "$ACTION" = "ifup" ]; then
-	ifname="$(uci -q get network.wan.ifname)"
-	wannum=$(uci -q get syncdial.general.wannum)
-	for i in $(seq 1 $wannum); do
-		if [ ! -d /sys/class/net/macvlan$i ]; then
-			mac_str="$(cat /sys/class/net/${ifname}/address | awk -F ':' '{print $1":"$2":"$3":"$4":"$5}')"
-			mac_str="${mac_str}$(printf ":%x" $(expr 16 + $i))"
+	[ "$ACTION" = "ifup" ] && {
+	ifname=$(uci get network.wan.ifname)
+	wannum=$(uci get syncdial.config.wannum)
+	for i in $(seq 1 $wannum)
+	do
+		[ -d /sys/class/net/macvlan$i ] || {
 			ip link add link $ifname name macvlan$i type macvlan
-			ifconfig macvlan$i hw ether "$mac_str"
+			ifconfig macvlan$i hw ether $(echo $(cat /sys/class/net/$ifname/address|awk -F ":" '{print $1":"$2":"$3":"$4":"$5":" }')$(echo "" | awk -F ":" '{printf("%X\n", 16+i);}' i=$i))
 			ifconfig macvlan$i up
-		fi
+		}
 	done
-fi
+}
