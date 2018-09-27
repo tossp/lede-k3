@@ -24,7 +24,7 @@ stages:
     - ./scripts/feeds install -a
     - cp tsconfig .config
     - make defconfig
-    - make -j$(nproc) V=1
+    - make -j$(nproc) V=sc
     - cp .config bin/config.txt
   only:
     - ci
