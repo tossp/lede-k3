@@ -3,7 +3,6 @@
 uci set luci.main.lang=zh_cn
 uci commit luci
 
-uci set system.@system[0].hostname=tsk3
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
 uci commit system
