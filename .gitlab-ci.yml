@@ -7,6 +7,7 @@ stages:
      
 构建编译:
   stage: 构建阶段
+  retry: 2
   variables:
     FORCE_UNSAFE_CONFIGURE: '1'  
   artifacts:
