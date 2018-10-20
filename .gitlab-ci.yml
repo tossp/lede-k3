@@ -19,7 +19,6 @@ stages:
     - mkdir -p /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
    # - make clean
    # - ./scripts/feeds clean -a
-    - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
     - ./scripts/feeds update -a 
