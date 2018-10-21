@@ -25,7 +25,6 @@ stages:
     - ./scripts/feeds update -a 
     - ./scripts/feeds install -a
     - cp tsconfig .config
-    - make oldconfig
     - make defconfig
     - make -j$(nproc) V=1
    # - make -j1 V=1
