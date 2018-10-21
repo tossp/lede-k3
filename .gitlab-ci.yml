@@ -7,7 +7,7 @@ stages:
      
 构建编译:
   stage: 构建阶段
-  retry: 2
+  retry: 1
   variables:
     FORCE_UNSAFE_CONFIGURE: '1'  
   artifacts:
@@ -24,8 +24,8 @@ stages:
     - ./scripts/feeds update -a 
     - ./scripts/feeds install -a
     - cp tsconfig .config
-    - make defconfig
     - make oldconfig
+    - make defconfig
     - make -j$(nproc) V=1
    # - make -j1 V=1
     - cp .config bin/config.txt
