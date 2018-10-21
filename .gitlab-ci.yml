@@ -27,8 +27,8 @@ stages:
     - cp tsconfig .config
     - make defconfig
     - make oldconfig
-    # - make -j$(nproc) V=1
-    - make -j1 V=sc
+    - make -j$(nproc) V=1
+    # - make -j1 V=sc
     - cp .config bin/config.txt
   only:
     - ci
