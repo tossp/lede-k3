@@ -40,7 +40,7 @@ stages:
   stage: 部署阶段
   retry: 2
   dependencies:
-    - 构建编译
+    - 编译打包
   environment:
     name: 'QN-OSS'
     url: http://lede-k3.test.tossp.com/$CI_COMMIT_SHA/index.html
