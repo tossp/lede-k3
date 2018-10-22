@@ -1,3 +1,3 @@
 [submodule "package/ts"]
 	path = package/ts
-	url = https://github.com/tossp/lede-pack.git
+url=http://github.com/tossp/lede-pack.git
