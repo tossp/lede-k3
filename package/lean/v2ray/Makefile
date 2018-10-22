@@ -6,10 +6,6 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=v2ray
-PKG_VERSION:=v3.47
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
-
 ifeq ($(ARCH),x86_64)
 	PKG_ARCH_V2RAY:=linux-64
 endif
@@ -28,6 +24,13 @@ endif
 ifeq ($(ARCH),aarch64)
 	PKG_ARCH_V2RAY:=linux-arm64
 endif
+
+PKG_NAME:=v2ray
+PKG_VERSION:=3.47
+PKG_RELEASE:=1
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_ARCH_V2RAY).zip
+PKG_SOURCE_URL:=https://github.com/v2ray/v2ray-core/releases/download/v$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -75,13 +78,10 @@ V2Ray is a cross-platform proxy software
 endef
 
 define Build/Prepare
-	
-	wget https://github.com/v2ray/v2ray-core/releases/download/$(PKG_VERSION)/v2ray-$(PKG_ARCH_V2RAY).zip -O $(PKG_BUILD_DIR)/v2ray-$(PKG_VERSION)-$(PKG_ARCH_V2RAY).zip
-	unzip -o $(PKG_BUILD_DIR)/v2ray-$(PKG_VERSION)-$(PKG_ARCH_V2RAY).zip -d $(PKG_BUILD_DIR)
-ifdef CONFIG_PACKAGE_V2RAY_SOFTFLOAT
-	[ -f $(PKG_BUILD_DIR)/v2ray_softfloat ] && mv $(PKG_BUILD_DIR)/v2ray_softfloat $(PKG_BUILD_DIR)/v2ray || echo "Can't find soft-float binary."
-	[ -f $(PKG_BUILD_DIR)/v2ctl_softfloat ] && mv $(PKG_BUILD_DIR)/v2ctl_softfloat $(PKG_BUILD_DIR)/v2ctl || echo "Can't find soft-float binary."
-endif
+	ifdef CONFIG_PACKAGE_V2RAY_SOFTFLOAT
+		[ -f $(PKG_BUILD_DIR)/v2ray_softfloat ] && mv $(PKG_BUILD_DIR)/v2ray_softfloat $(PKG_BUILD_DIR)/v2ray || echo "Can't find soft-float binary."
+		[ -f $(PKG_BUILD_DIR)/v2ctl_softfloat ] && mv $(PKG_BUILD_DIR)/v2ctl_softfloat $(PKG_BUILD_DIR)/v2ctl || echo "Can't find soft-float binary."
+	endif
 endef
 
 define Build/Configure
@@ -92,18 +92,18 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin/v2ray
-ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_V2RAY
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/v2ray $(1)/usr/bin/v2ray/
-endif
-ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_V2CTL
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/v2ctl $(1)/usr/bin/v2ray/
-endif
-ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_GEOIP
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/geoip.dat $(1)/usr/bin/v2ray/
-endif
-ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_GEOSITE
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/geosite.dat $(1)/usr/bin/v2ray/
-endif
+	ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_V2RAY
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/v2ray $(1)/usr/bin/v2ray/
+	endif
+	ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_V2CTL
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/v2ctl $(1)/usr/bin/v2ray/
+	endif
+	ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_GEOIP
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/geoip.dat $(1)/usr/bin/v2ray/
+	endif
+	ifdef CONFIG_PACKAGE_V2RAY_INCLUDE_GEOSITE
+		$(INSTALL_BIN) $(PKG_BUILD_DIR)/geosite.dat $(1)/usr/bin/v2ray/
+	endif
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
