@@ -5,7 +5,7 @@ stages:
   - 构建阶段
   - 部署阶段
      
-构建编译:
+编译打包:
   stage: 构建阶段
   retry: 1
   variables:
