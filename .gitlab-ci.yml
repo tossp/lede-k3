@@ -28,8 +28,7 @@ stages:
     - cp tsconfig .config
     - make defconfig
     - make oldconfig
-    # - make -j$(nproc)
-    - make -j1 V=sc
+    - make -j$(nproc)
     - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
