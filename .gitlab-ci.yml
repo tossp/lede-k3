@@ -11,11 +11,11 @@ stages:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
     FORCE_UNSAFE_CONFIGURE: '1'  
-  artifacts:
-    name: "${CI_JOB_STAGE}_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
-    expire_in: 6 mos
-    paths:
-      - bin/
+  # artifacts:
+  #   name: "${CI_JOB_STAGE}_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
+  #   expire_in: 6 mos
+  #   paths:
+  #     - bin/
   script:
     - mkdir -p /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
    # - make clean
@@ -33,6 +33,22 @@ stages:
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
     - cp build.txt bin/build.txt
+    - cp index.tmpl bin/index.html
+    - tree -L 5 bin/ > bin/tree.txt
+    - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" bin/index.html
+    - sed -i "s/CI_RUNNER_DESCRIPTION/$CI_RUNNER_DESCRIPTION/g" bin/index.html
+    - sed -i "s/CI_RUNNER_TAGS/$CI_RUNNER_TAGS/g" bin/index.html
+    - sed -i "s/CI_BUILD_TIME/$TSTIME/g" bin/index.html
+    - mkdir -p $CI_COMMIT_SHA
+    - mv -f bin/* $CI_COMMIT_SHA
+    - mv -f $CI_COMMIT_SHA bin/
+    - cp bin/$CI_COMMIT_SHA/index.html bin/
+    - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
+    - chmod a+x /bin/qshell
+    - qshell account $QNAK $QNSK
+    - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
+    - cat /root/ts.log
   only:
     - ci
      
@@ -64,4 +80,4 @@ stages:
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - cat /root/ts.log
   only:
-    - ci
+    - ci1
