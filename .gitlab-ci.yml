@@ -28,10 +28,11 @@ stages:
     - cp tsconfig .config
     - make defconfig
     - make oldconfig
-    - make -j$(nproc)
+    - make -j$(nproc) V=s 2>&1 | tee build.txt | grep -E -e 'time.+(#[\.0-9]+){3}' -e 'make\[[1-9]\].{2}(Leav|Enter)ing directory.+'
     - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
+    - cp build.txt bin/build.txt
   only:
     - ci
      
