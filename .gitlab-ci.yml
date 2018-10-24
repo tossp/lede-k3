@@ -50,7 +50,6 @@ stages:
     - chmod a+x /bin/qshell
     - qshell account $QNAK $QNSK
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
-    - cat /root/ts.log
   only:
     - ci
 
