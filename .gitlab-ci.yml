@@ -26,6 +26,7 @@ stages:
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/zzz-default-settings
     - ./scripts/feeds update -a
     - ./scripts/feeds install -a
     - cp tsconfig .config
@@ -50,6 +51,7 @@ stages:
     - chmod a+x /bin/qshell
     - qshell account $QNAK $QNSK
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
+    - cat /root/ts.log
   only:
     - ci
 

@@ -69,6 +69,15 @@ rm -f /tmp/luci-indexcache
 [ -f /etc/init.d/softethervpnclient ] && /etc/init.d/softethervpnclient disable
 [ -f /etc/init.d/softethervpnclient ] && /etc/init.d/softethervpnclient stop
 
+opkg_items_version='CI_COMMIT_SHA'
+sed -i '/tossp_k3_/d' /etc/opkg/distfeeds.conf
+echo "src/gz tossp_k3_core http://lede-k3.test.tossp.com/${opkg_items_version}/targets/bcm53xx/generic/packages" >> /etc/opkg/distfeeds.conf
+opkg_items="base luci packages routing"
+for item in ${opkg_items}; do echo "src/gz tossp_k3_${item} http://lede-k3.test.tossp.com/${opkg_items_version}/packages/arm_cortex-a9/${item}" >> /etc/opkg/distfeeds.conf; done
+
+sed -i '/DISTRIB_TOSSP_COM/d' /etc/openwrt_release
+echo "DISTRIB_TOSSP_COM_REVISION='${opkg_items_version}'" >> /etc/openwrt_release
+
 chmod -R a+r,a+X /www
 
 exit 0
