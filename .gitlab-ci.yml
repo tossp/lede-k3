@@ -26,16 +26,13 @@ stages:
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
-    - echo "SHA $CI_COMMIT_SHA $CI_COMMIT_BEFORE_SHA"
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/files/zzz-default-settings
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/Makefile
     - ./scripts/feeds update -a
     - ./scripts/feeds install -a
-    - echo "SHA $CI_COMMIT_SHA $CI_COMMIT_BEFORE_SHA"
-    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/files/zzz-default-settings
     - cp tsconfig .config
     - make defconfig
-    - echo "SHA $CI_COMMIT_SHA $CI_COMMIT_BEFORE_SHA"
     - (make -j$(nproc) V=s 2>&1 | tee build.txt | grep -E -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 build.txt && exit 66)
-    - echo "SHA $CI_COMMIT_SHA $CI_COMMIT_BEFORE_SHA"
     - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
@@ -57,7 +54,6 @@ stages:
     - cp index.tmpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
-    - echo "SHA $CI_COMMIT_SHA $CI_COMMIT_BEFORE_SHA"
     - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" bin/index.html
     - sed -i "s/CI_RUNNER_DESCRIPTION/$CI_RUNNER_DESCRIPTION/g" bin/index.html
     - sed -i "s/CI_RUNNER_TAGS/$CI_RUNNER_TAGS/g" bin/index.html

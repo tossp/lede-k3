@@ -76,7 +76,7 @@ opkg_items="base luci packages routing"
 for item in ${opkg_items}; do echo "src/gz tossp_k3_${item} http://lede-k3.test.tossp.com/${opkg_items_version}/packages/arm_cortex-a9/${item}" >> /etc/opkg/distfeeds.conf; done
 
 sed -i '/DISTRIB_TOSSP_COM/d' /etc/openwrt_release
-echo "DISTRIB_TOSSP_COM_REVISION='${opkg_items_version}'" >> /etc/openwrt_release
+echo "DISTRIB_TOSSP_COM_REVISION='CI_COMMIT_SHA'" >> /etc/openwrt_release
 
 chmod -R a+r,a+X /www
 
