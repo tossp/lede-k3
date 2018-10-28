@@ -26,8 +26,8 @@ stages:
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
-    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/files/zzz-default-settings
-    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/lean/default-settings/Makefile
+    - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/ts/ts-settings/files/ts-default-settings
+    - COMMIT_SHA_VERSION=${CI_COMMIT_SHA:0:8} sed -i "s/COMMIT_SHA_VERSION/$COMMIT_SHA_VERSION/g" ./package/ts/ts-settings/Makefile
     - ./scripts/feeds update -a
     - ./scripts/feeds install -a
     - cp tsconfig .config
