@@ -7,6 +7,7 @@ CONFIG_DROPBEAR_ECC=y
 CONFIG_PACKAGE_curl=y
 CONFIG_PACKAGE_haproxy=y
 CONFIG_PACKAGE_softethervpn=y
+CONFIG_PACKAGE_softethervpn5-server=y
 
 CONFIG_PACKAGE_kmod-fs-nfs-v4=y
 CONFIG_PACKAGE_kmod-loop=y
@@ -31,7 +32,6 @@ CONFIG_PACKAGE_luci-app-frpc=y
 CONFIG_PACKAGE_luci-app-v2ray-pro=y
 CONFIG_PACKAGE_luci-app-wifidog-ng=y
 CONFIG_PACKAGE_luci-app-diag-core=y
-CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
 CONFIG_PACKAGE_luci-app-kcptun=m
 CONFIG_PACKAGE_luci-app-zerotier=m
 CONFIG_PACKAGE_luci-app-xunlei=m
@@ -55,3 +55,4 @@ CONFIG_PACKAGE_ipv6helper=y
 # ts
 CONFIG_PACKAGE_ts-settings=y
 CONFIG_PACKAGE_luci-app-dnsforwarder=y
+CONFIG_PACKAGE_frps=y
