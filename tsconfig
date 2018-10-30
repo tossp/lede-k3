@@ -7,7 +7,6 @@ CONFIG_DROPBEAR_ECC=y
 CONFIG_PACKAGE_curl=y
 CONFIG_PACKAGE_haproxy=y
 CONFIG_PACKAGE_softethervpn=y
-CONFIG_PACKAGE_softethervpn5-server=y
 
 CONFIG_PACKAGE_kmod-fs-nfs-v4=y
 CONFIG_PACKAGE_kmod-loop=y
