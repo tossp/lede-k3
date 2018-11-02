@@ -75,6 +75,6 @@ stages:
     - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - qshell cdnrefresh refresh.list
-    - cat /root/ts.log
+    - cat /root/ts.log | grep -Ev ' \[I\] [A-Z]'
   only:
     - ci
