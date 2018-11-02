@@ -66,12 +66,12 @@ stages:
     - sed -i "s/CI_RUNNER_DESCRIPTION/$CI_RUNNER_DESCRIPTION/g" bin/index.html
     - sed -i "s/CI_RUNNER_TAGS/$CI_RUNNER_TAGS/g" bin/index.html
     - sed -i "s/CI_BUILD_TIME/$TSTIME/g" bin/index.html
-    - qshell listbucket lede-k3 history.list && grep index.html history.list | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {if (NR>1){print "<div>"strftime("%Y-%m-%d %T",substr($5,0,10)+28800)"： 版本标识<a href=\"/"$1"/index.html\" target=\"_blank\">[<code>"substr($1,0,7)"</code>]</a></div>"}}' > history
-    - sed -i '/CI_BUILD_HISTORY/r history' bin/index.html
     - mkdir -p $CI_COMMIT_SHA
     - mv -f bin/* $CI_COMMIT_SHA
     - mv -f $CI_COMMIT_SHA bin/
     - cp bin/$CI_COMMIT_SHA/index.html bin/
+    - qshell listbucket lede-k3 his 
+    - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
     - qshell qupload2 -log-file /root/ts.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - cat /root/ts.log
   only:
