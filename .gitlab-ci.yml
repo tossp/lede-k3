@@ -66,8 +66,8 @@ stages:
     - sed -i "s/CI_RUNNER_DESCRIPTION/$CI_RUNNER_DESCRIPTION/g" bin/index.html
     - sed -i "s/CI_RUNNER_TAGS/$CI_RUNNER_TAGS/g" bin/index.html
     - sed -i "s/CI_BUILD_TIME/$TSTIME/g" bin/index.html
-    - TSHISTORY=$(qshell listbucket lede-k3 lede-k3.list.txt && grep index.html lede-k3.list.txt | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {if (NR>1){print "<div>"strftime("%Y-%m-%d %T",substr($5,0,10)+28800)"： 版本标识<a href=\"/"$1"/index.html\" target=\"_blank\">[<code>"substr($1,0,7)"</code>]</a></div>"}}')
-    - sed -i "s/CI_BUILD_CI_BUILD_history/$TSHISTORY/g" bin/index.html
+    - qshell listbucket lede-k3 history.list && grep index.html history.list | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {if (NR>1){print "<div>"strftime("%Y-%m-%d %T",substr($5,0,10)+28800)"： 版本标识<a href=\"/"$1"/index.html\" target=\"_blank\">[<code>"substr($1,0,7)"</code>]</a></div>"}}' > history
+    - sed -i '/CI_BUILD_HISTORY/r history' bin/index.html
     - mkdir -p $CI_COMMIT_SHA
     - mv -f bin/* $CI_COMMIT_SHA
     - mv -f $CI_COMMIT_SHA bin/
