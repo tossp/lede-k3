@@ -41,8 +41,8 @@ CONFIG_PACKAGE_luci-theme-material=y
 
 CONFIG_PACKAGE_iperf3=y
 CONFIG_PACKAGE_htop=y
-CONFIG_PACKAGE_rpcd-mod-file=y
-CONFIG_PACKAGE_uhttpd-mod-ubus=y
+#CONFIG_PACKAGE_rpcd-mod-file=y
+#CONFIG_PACKAGE_uhttpd-mod-ubus=y
 CONFIG_PACKAGE_iputils-traceroute6=y
 # 教育网需求
 CONFIG_PACKAGE_ebtables=m
