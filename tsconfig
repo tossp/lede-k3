@@ -6,7 +6,8 @@ CONFIG_DROPBEAR_ECC=y
 
 CONFIG_PACKAGE_curl=y
 CONFIG_PACKAGE_haproxy=y
-CONFIG_PACKAGE_softethervpn=y
+#CONFIG_PACKAGE_softethervpn=y
+CONFIG_PACKAGE_softethervpn5-server=y
 
 CONFIG_PACKAGE_luci-base=y
 CONFIG_PACKAGE_luci-app-frpc=y
