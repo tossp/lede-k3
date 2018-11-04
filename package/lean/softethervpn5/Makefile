@@ -2,7 +2,7 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=softethervpn
+PKG_NAME:=softethervpn5
 PKG_VERSION_NAME:=5.01.9662
 PKG_RELEASE:=1
 
