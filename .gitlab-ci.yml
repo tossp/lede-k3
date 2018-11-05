@@ -40,6 +40,7 @@ stages:
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
     - mv /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt bin/build.txt
+    - rm -rf /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build_dir
   only:
     - ci
 
