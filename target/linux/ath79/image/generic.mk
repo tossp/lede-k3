@@ -69,24 +69,61 @@ define Device/avm_fritz4020
 endef
 TARGET_DEVICES += avm_fritz4020
 
+define Device/buffalo_bhr-4grv
+  ATH_SOC := ar7242
+  DEVICE_TITLE := Buffalo BHR-4GRV
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport
+  IMAGE_SIZE := 32256k
+  IMAGES += factory.bin tftp.bin
+  IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
+  IMAGE/factory.bin := $$(IMAGE/default) | buffalo-enc BHR-4GRV 1.99 | buffalo-tag BHR-4GRV 3
+  IMAGE/tftp.bin := $$(IMAGE/default) | buffalo-tftp-header
+  SUPPORTED_DEVICES += wzr-hp-g450h
+endef
+TARGET_DEVICES += buffalo_bhr-4grv
+
+define Device/buffalo_bhr-4grv2
+  ATH_SOC := qca9557
+  DEVICE_TITLE := Buffalo BHR-4GRV2
+  IMAGE_SIZE := 16000k
+endef
+TARGET_DEVICES += buffalo_bhr-4grv2
+
 define Device/buffalo_wzr-hp-ag300h
   ATH_SOC := ar7161
   DEVICE_TITLE := Buffalo WZR-HP-AG300H
   IMAGE_SIZE := 32256k
   IMAGES += factory.bin tftp.bin
   IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
-  IMAGE/factory.bin := $$(IMAGE/default) | buffalo-enc WZR-HP-AG300H 1.99 | buffalo-tag WZR-HP-AG300H
+  IMAGE/factory.bin := $$(IMAGE/default) | buffalo-enc WZR-HP-AG300H 1.99 | buffalo-tag WZR-HP-AG300H 3
   IMAGE/tftp.bin := $$(IMAGE/default) | buffalo-tftp-header
   DEVICE_PACKAGES := kmod-usb-core kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport kmod-leds-reset kmod-owl-loader
   SUPPORTED_DEVICES += wzr-hp-ag300h
 endef
 TARGET_DEVICES += buffalo_wzr-hp-ag300h
 
+define Device/buffalo_wzr-hp-g302h-a1a0
+  ATH_SOC := ar7242
+  DEVICE_TITLE := Buffalo WZR-HP-G302H A1A0
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport
+  IMAGE_SIZE := 32128k
+  IMAGES += factory.bin tftp.bin
+  IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
+  IMAGE/factory.bin := $$(IMAGE/default) | buffalo-enc WZR-HP-G302H 1.99 | buffalo-tag WZR-HP-G302H 4
+  IMAGE/tftp.bin := $$(IMAGE/default) | buffalo-tftp-header
+  SUPPORTED_DEVICES += wzr-hp-g300nh2
+endef
+TARGET_DEVICES += buffalo_wzr-hp-g302h-a1a0
+
 define Device/buffalo_wzr-hp-g450h
   ATH_SOC := ar7242
-  DEVICE_TITLE := Buffalo WZR-HP-G450H
+  DEVICE_TITLE := Buffalo WZR-HP-G450H/WZR-450HP
   DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport
   IMAGE_SIZE := 32256k
+  IMAGES += factory.bin tftp.bin
+  IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE)
+  IMAGE/factory.bin := $$(IMAGE/default) | buffalo-enc WZR-HP-G450H 1.99 | buffalo-tag WZR-HP-G450H 3
+  IMAGE/tftp.bin := $$(IMAGE/default) | buffalo-tftp-header
   SUPPORTED_DEVICES += wzr-hp-g450h
 endef
 TARGET_DEVICES += buffalo_wzr-hp-g450h
@@ -146,6 +183,14 @@ define Device/glinet_ar300m_nor
 endef
 TARGET_DEVICES += glinet_ar300m_nor
 
+define Device/glinet_gl-x750
+  ATH_SOC := qca9533
+  DEVICE_TITLE := GL.iNet GL-X750
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2  kmod-ath10k ath10k-firmware-qca9887
+  IMAGE_SIZE := 16000k
+endef
+TARGET_DEVICES += glinet_gl-x750
+
 define Device/iodata_etg3-r
   ATH_SOC := ar9342
   DEVICE_TITLE := I-O DATA ETG3-R
@@ -161,7 +206,7 @@ define Device/iodata_wn-ac1167dgr
   IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
     append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE) | \
     senao-header -r 0x30a -p 0x61 -t 2
-  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-ath10k ath10k-firmware-qca988x
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca988x-ct
 endef
 TARGET_DEVICES += iodata_wn-ac1167dgr
 
@@ -173,14 +218,14 @@ define Device/iodata_wn-ac1600dgr2
   IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
     append-rootfs | pad-rootfs | check-size $$$$(IMAGE_SIZE) | \
     senao-header -r 0x30a -p 0x60 -t 2 -v 200
-  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-ath10k ath10k-firmware-qca988x
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca988x-ct
 endef
 TARGET_DEVICES += iodata_wn-ac1600dgr2
 
 define Device/ocedo_koala
   ATH_SOC := qca9558
   DEVICE_TITLE := OCEDO Koala
-  DEVICE_PACKAGES := kmod-ath10k ath10k-firmware-qca988x
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
   SUPPORTED_DEVICES += koala
   IMAGE_SIZE := 7424k
   IMAGE/sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
@@ -198,7 +243,7 @@ TARGET_DEVICES += ocedo_raccoon
 define Device/openmesh_om5p-ac-v2
   ATH_SOC := qca9558
   DEVICE_TITLE := OpenMesh OM5P-AC v2
-  DEVICE_PACKAGES := kmod-ath10k ath10k-firmware-qca988x om-watchdog
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct om-watchdog
   IMAGE_SIZE := 7808k
   SUPPORTED_DEVICES += om5p-acv2
 endef
@@ -295,9 +340,17 @@ define Device/phicomm_k2t
   IMAGES := sysupgrade.bin
   IMAGE/default := append-kernel | append-rootfs | pad-rootfs
   IMAGE/sysupgrade.bin := $$(IMAGE/default) | append-metadata | check-size $$$$(IMAGE_SIZE)
-  DEVICE_PACKAGES := kmod-leds-reset kmod-ath10k ath10k-firmware-qca9888
+  DEVICE_PACKAGES := kmod-leds-reset kmod-ath10k-ct ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += phicomm_k2t
+
+define Device/rosinson_wr818
+  ATH_SOC := qca9563
+  DEVICE_TITLE := ROSINSON WR818
+  IMAGE_SIZE := 15872k
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += rosinson_wr818
 
 define Device/wd_mynet-wifi-rangeextender
   ATH_SOC := ar9344
