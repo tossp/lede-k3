@@ -10,7 +10,7 @@ DNSFORWARDER_CONF=/tmp/dnsforwarder.conf
 add_cron()
 {
 	sed -i '/dnsforwarder/d' $CRON_FILE
-	echo '0 */1 * * * /etc/init.d/dnsforwarder health' >> $CRON_FILE
+	echo '*/3 * * * * /etc/init.d/dnsforwarder health' >> $CRON_FILE
 	echo '0 1 * * 0 /etc/init.d/dnsforwarder makegfwlist' >> $CRON_FILE
 	crontab $CRON_FILE
 }
@@ -163,7 +163,6 @@ makeconfig () {
 
 start()
 {
-    echo luci for dnsforwarder
     local vt_enabled=$(uci get dnsforwarder.@arguments[0].enabled 2>/dev/null)
     if [ $vt_enabled = 0 ]; then
         echo dnsforwarder is not enabled
@@ -172,7 +171,7 @@ start()
     makeconfig
 	fixflowoffload	
     dnsforwarder -f $DNSFORWARDER_CONF -d
-	sleep 10
+	sleep 15
     mkdir -p ${PID_PATH}
     pid=$(ps | awk '$5 ~ /\[dnsforwarder\]/ {print $1}')
     echo "dnsforwarder running pid is ${pid}"
