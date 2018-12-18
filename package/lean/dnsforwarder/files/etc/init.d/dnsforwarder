@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
 
-START=60
+START=99
 
 CRON_FILE=/etc/crontabs/root
 PID_PATH=/var/run/dnsforwarder
@@ -40,18 +40,32 @@ makelist() {
 }
 
 health(){
-	rm /var/log/dnsforwarder.log.* 2>/dev/null
+	rm '/var/log/dnsforwarder.log.*' 2>/dev/null
 	local pid=$(cat ${PID_FILE} 2>/dev/null)
-	if [ -n "${pid}" -a -d /proc/$pid ]; then
-		echo "[health] process exists ${pid}"
-	else
+	if [ -z "${pid}" ]; then
+		echo "[health] Dnsforwarder is not running"
+		start
+		return
+	fi
+	if [ ! -d /proc/${pid} ]; then
 		echo "[health] Dnsforwarder is not running ${pid}"
 		start
+		return
+	fi
+	local name=$(uci get system.@system[0].hostname 2>/dev/null)
+	local proto=$(uci get network.lan.proto 2>/dev/null)
+	if [ -n "${name}" -a "${proto}"="static" ]; then
+		ping -c1 ${name} > /dev/null
+		if [ $? = 1 ];then
+			echo "[health] The hostname Can't find ${name}, Dnsforwarder will be restart"
+			logger -t dnsforwarder "[health] The hostname Can't find ${name}, Dnsforwarder will be restart"
+			restart
+		fi
 	fi
 }
 
 
-makegfwlist(){	
+makegfwlist(){
 	local GFW_FILE='/etc/dnsforwarder/gfw.txt'
 	local GFW_TMP_FILE='/tmp/dnsforwarder-gfw.old'
 	local TSTIME=`date '+%Y-%m-%d %H:%M:%S'`
@@ -63,7 +77,7 @@ makegfwlist(){
 	/usr/share/dnsforwarder/gfwlist.sh -i -l -o /tmp/dnsforwarder-gfw.tmp --extra-domain-file /tmp/edf.ts
 	if [ $? != 0 ]; then
         echo 'Failed to fetch gfwlist'		
-		logger -t  Failed to fetch gfwlist
+		logger -t dnsforwarder 'Failed to fetch gfwlist'
         return 2
     fi
 	local gfw=$(cat /tmp/dnsforwarder-gfw.tmp)
@@ -82,6 +96,42 @@ makegfwlist(){
 		restart		
 	fi
 }
+hookdnsmasq(){
+	local CONF_FILE='/etc/dnsforwarder/dnsmasq.conf'
+	local TMP_CONF_FILE='/tmp/dnsmasq.dnsforwarder.conf'
+    local dnsmasq=$(uci get dnsforwarder.@arguments[0].dnsmasq 2>/dev/null)	
+	local serversfile=$(uci get dhcp.@dnsmasq[0].serversfile 2>/dev/null)
+	local udp_local_addr=$(uci get dnsforwarder.@arguments[0].addr 2>/dev/null)
+	
+	udp_local_addr=${udp_local_addr/:/#}
+	[ -n "$udp_local_addr" ] && eval "makelist 'server=' $udp_local_addr" > ${TMP_CONF_FILE}
+	sed -i "s/ //g" ${TMP_CONF_FILE}
+	touch ${CONF_FILE}
+	if ( ! cmp -s ${TMP_CONF_FILE} ${CONF_FILE} );then
+		mv ${TMP_CONF_FILE} ${CONF_FILE}
+	fi
+	
+	if [ "${dnsmasq}" = "1" -a "${serversfile}" != "${CONF_FILE}" ]; then
+        uci delete dhcp.@dnsmasq[0].server 2>/dev/null
+        uci delete dhcp.@dnsmasq[0].resolvfile 2>/dev/null
+        uci set dhcp.@dnsmasq[0].noresolv=1
+		uci set dhcp.@dnsmasq[0].serversfile=${CONF_FILE}
+        uci commit dhcp        
+        /etc/init.d/dnsmasq restart
+    fi
+}
+
+unhookdnsmasq(){
+	local serversfile=$(uci get dhcp.@dnsmasq[0].serversfile 2>/dev/null)
+	if [ "${serversfile}" = "/etc/dnsforwarder/dnsmasq.conf" ]; then
+        uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto 2>/dev/null
+		uci delete dhcp.@dnsmasq[0].noresolv 2>/dev/null
+		uci delete dhcp.@dnsmasq[0].serversfile 2>/dev/null
+		uci commit dhcp	
+		/etc/init.d/dnsmasq restart
+    fi
+}
+
 
 makeconfig () {
     config_load dnsforwarder
@@ -108,20 +158,15 @@ makeconfig () {
 	local cache_control=$(uci get dnsforwarder.@config[0].cache_control 2>/dev/null)	
 	
 	local domain_statistic=$(uci get dnsforwarder.@config[0].domain_statistic 2>/dev/null)
-	local udp_local_addr=$(uci get dnsforwarder.@arguments[0].addr 2>/dev/null)
-	udp_local_addr=${udp_local_addr/:/#}
 
     echo "LogOn ${log}" > $DNSFORWARDER_CONF
     if [ $log = "true" ]; then
-		rm /var/log/dnsforwarder.log.* 2>/dev/null
 		echo '' > /var/log/dnsforwarder.log
         echo "LogFileThresholdLength ${log_size}" >> $DNSFORWARDER_CONF
         echo "LogFileFolder /var/log" >> $DNSFORWARDER_CONF
     fi
 	
     [ -n "$udp_local" ] && echo "UDPLocal ${udp_local}" >> $DNSFORWARDER_CONF
-	[ -n "$udp_local_addr" ] && eval "makelist 'server=' $udp_local_addr" > /tmp/dnsmasq.dnsforwarder.conf
-	sed -i "s/ //g" /tmp/dnsmasq.dnsforwarder.conf
 
     eval "makelist 'TCPGroup' $tcp_group" >> $DNSFORWARDER_CONF
     eval "makelist 'UDPGroup' $udp_group" >> $DNSFORWARDER_CONF
@@ -167,82 +212,51 @@ start()
     if [ $vt_enabled = 0 ]; then
         echo dnsforwarder is not enabled
         exit
-    fi 	
+    fi
+	hookdnsmasq
     makeconfig
 	fixflowoffload	
     dnsforwarder -f $DNSFORWARDER_CONF -d
-	sleep 15
+	sleep 5s
+	local times=0
+	local pid=''
     mkdir -p ${PID_PATH}
-    pid=$(ps | awk '$5 ~ /\[dnsforwarder\]/ {print $1}')
+	until [ -n "${pid}" -o ${times} -gt 9 ]
+	do
+		pid=$(ps | awk '$5 ~ /\[dnsforwarder\]/ {print $1}')
+		times=`expr ${times} + 1`
+	done
     echo "dnsforwarder running pid is ${pid}"
-    logger -t The pid of dnsforwarder is ${PID_FILE} ${pid}
+    logger -t dnsforwarder "The pid of dnsforwarder is ${PID_FILE} ${pid}"
     echo ${pid} > ${PID_FILE}
-    /etc/init.d/dnsforwarder enable
-    local dnsmasq=$(uci get dnsforwarder.@arguments[0].dnsmasq 2>/dev/null)
-    local addr=$(uci get dnsforwarder.@arguments[0].addr 2>/dev/null)
-    [ -n "${addr}" ] && addr=${addr/:/#}
-	
-	if [ "${dnsmasq}" = "1" ]; then
-        uci delete dhcp.@dnsmasq[0].server 2>/dev/null
-        # uci add_list dhcp.@dnsmasq[0].server=$addr
-        uci delete dhcp.@dnsmasq[0].resolvfile 2>/dev/null
-        uci set dhcp.@dnsmasq[0].noresolv=1
-		uci set dhcp.@dnsmasq[0].serversfile=/tmp/dnsmasq.dnsforwarder.conf
-        uci commit dhcp        
-        /etc/init.d/dnsmasq restart
-    fi
+    /etc/init.d/dnsforwarder enable	
 	add_cron
 }
 
 stop()
 {
 	del_cron
-	logger -t stopping dnsforwarder
-    local addr=$(uci get dnsforwarder.@arguments[0].addr 2>/dev/null)
-    addr=${addr/:/#}
-    uci del_list dhcp.@dnsmasq[0].server=$addr 2>/dev/null
-    uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto 2>/dev/null
-    uci delete dhcp.@dnsmasq[0].noresolv 2>/dev/null
-	uci delete dhcp.@dnsmasq[0].serversfile 2>/dev/null
-    uci commit dhcp	
-    /etc/init.d/dnsmasq restart
-    [ -e ${PID_FILE} ] && {
-        pid=$(cat ${PID_FILE})
-        logger -t killing dnsforwarder pid ${pid}
-        echo killing dnsforwarder pid ${pid}
-        kill ${pid}
-        rm -f ${PID_FILE}
-    } || {
-        logger -t Cannot find dnsforwarder pid file
-    }
+	logger -t dnsforwarder "stopping"
+	local pid=$(ps | awk '$5 ~ /\[dnsforwarder\]/ {print $1}')
+    logger -t dnsforwarder "killing dnsforwarder pid ${pid}"
+	echo killing dnsforwarder pid ${pid}
+	kill ${pid}	
+    sleep 2s
+	rm -f ${PID_FILE}
+	unhookdnsmasq
 }
 
 restart()
 {
-    pid=$(cat ${PID_FILE} 2>/dev/null)
-    echo Dnsforwarder pid file is ${pid}
-    [ -n "$pid" ] && {
-        echo stopping pid ${pid}
-        logger -t There is dnsforwarder pid ${pid}
-        stop
-    } || {
-        logger -t Dnsforwarder is not running	
-    }
-    sleep 7
+	del_cron
+    stop
     local vt_enabled=$(uci get dnsforwarder.@arguments[0].enabled 2>/dev/null)
-    echo dnsforwarder status is ${vt_enabled} 
-    logger -t Dnsforwarder is initializing enabled is ${vt_enabled}
     if [ ${vt_enabled} = 1 ]; then
-        [ -n "$pid" ] && {
-            logger -t There is dnsforwarder pid ${pid}
-            stop
-        } || {
-            logger -t Dnsforwarder is not running	
-        }
-
-        logger -t Restarting dnsforwarder
+		rm /tmp/dnsforwarder.cache
+        logger -t dnsforwarder 'Restarting'
         start
     else
+		stop
         /etc/init.d/dnsforwarder disable
     fi
 }

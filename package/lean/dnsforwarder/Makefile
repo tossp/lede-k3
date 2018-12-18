@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsforwarder
 PKG_VERSION:=6.1.15
-PKG_RELEASE:=10
+PKG_RELEASE:=11
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=https://github.com/holmium/dnsforwarder.git
@@ -38,6 +38,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_CONF) files/etc/config/dnsforwarder $(1)/etc/config/dnsforwarder
 	$(INSTALL_DIR) $(1)/etc/dnsforwarder
 	$(INSTALL_CONF) files/etc/dnsforwarder/gfw.txt $(1)/etc/dnsforwarder/gfw.txt
+	$(INSTALL_CONF) files/etc/dnsforwarder/dnsmasq.conf $(1)/etc/dnsforwarder/dnsmasq.conf
 	$(INSTALL_DIR) $(1)/usr/share/dnsforwarder
 	$(INSTALL_BIN) files/usr/share/dnsforwarder/gfwlist.sh $(1)/usr/share/dnsforwarder/gfwlist.sh
 endef
