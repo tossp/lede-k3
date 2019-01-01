@@ -10,7 +10,7 @@ DNSFORWARDER_CONF=/tmp/dnsforwarder.conf
 add_cron()
 {
 	sed -i '/dnsforwarder/d' $CRON_FILE
-	echo '*/3 * * * * /etc/init.d/dnsforwarder health' >> $CRON_FILE
+	echo '*/15 * * * * /etc/init.d/dnsforwarder health' >> $CRON_FILE
 	echo '0 1 * * 0 /etc/init.d/dnsforwarder makegfwlist' >> $CRON_FILE
 	crontab $CRON_FILE
 }
@@ -40,7 +40,7 @@ makelist() {
 }
 
 health(){
-	rm '/var/log/dnsforwarder.log.*' 2>/dev/null
+	rm /var/log/dnsforwarder.log.*
 	local pid=$(cat ${PID_FILE} 2>/dev/null)
 	if [ -z "${pid}" ]; then
 		echo "[health] Dnsforwarder is not running"
@@ -103,33 +103,60 @@ hookdnsmasq(){
 	local serversfile=$(uci get dhcp.@dnsmasq[0].serversfile 2>/dev/null)
 	local udp_local_addr=$(uci get dnsforwarder.@arguments[0].addr 2>/dev/null)
 	
+	
+	if [ "${dnsmasq}" != "1" ]; then
+		if [ -L /tmp/dnsmasq.d/dnsforwarder.conf ]; then
+			rm /tmp/dnsmasq.d/dnsforwarder.conf
+			/etc/init.d/dnsmasq restart
+		fi
+		return
+	fi
+	
+	mkdir -p /tmp/dnsmasq.d
 	udp_local_addr=${udp_local_addr/:/#}
 	[ -n "$udp_local_addr" ] && eval "makelist 'server=' $udp_local_addr" > ${TMP_CONF_FILE}
 	sed -i "s/ //g" ${TMP_CONF_FILE}
 	touch ${CONF_FILE}
+	if [ "${dnsmasq}" = "1" ]; then
+		if [ ! -L /tmp/dnsmasq.d/dnsforwarder.conf ]; then
+			ln -s ${CONF_FILE} /tmp/dnsmasq.d/dnsforwarder.conf
+			/etc/init.d/dnsmasq restart
+		fi
+	fi
 	if ( ! cmp -s ${TMP_CONF_FILE} ${CONF_FILE} );then
 		mv ${TMP_CONF_FILE} ${CONF_FILE}
+		if [ "${dnsmasq}" = "1" ]; then
+			/etc/init.d/dnsmasq restart
+		fi
 	fi
 	
-	if [ "${dnsmasq}" = "1" -a "${serversfile}" != "${CONF_FILE}" ]; then
-        uci delete dhcp.@dnsmasq[0].server 2>/dev/null
-        uci delete dhcp.@dnsmasq[0].resolvfile 2>/dev/null
-        uci set dhcp.@dnsmasq[0].noresolv=1
-		uci set dhcp.@dnsmasq[0].serversfile=${CONF_FILE}
-        uci commit dhcp        
-        /etc/init.d/dnsmasq restart
-    fi
+	# if [ "${dnsmasq}" = "1" -a "${serversfile}" != "${CONF_FILE}" ]; then
+        # uci set dhcp.@dnsmasq[0].rebind_protection=0 2>/dev/null
+		# uci delete dhcp.@dnsmasq[0].rebind_localhost 2>/dev/null
+        # uci delete dhcp.@dnsmasq[0].server 2>/dev/null
+        # uci delete dhcp.@dnsmasq[0].resolvfile 2>/dev/null
+		# uci add_list dhcp.@dnsmasq[0].server=${udp_local_addr}
+        # uci set dhcp.@dnsmasq[0].noresolv=1
+		# uci set dhcp.@dnsmasq[0].serversfile=${CONF_FILE}
+        # uci commit dhcp        
+        # /etc/init.d/dnsmasq restart
+    # fi
 }
 
 unhookdnsmasq(){
-	local serversfile=$(uci get dhcp.@dnsmasq[0].serversfile 2>/dev/null)
-	if [ "${serversfile}" = "/etc/dnsforwarder/dnsmasq.conf" ]; then
-        uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto 2>/dev/null
-		uci delete dhcp.@dnsmasq[0].noresolv 2>/dev/null
-		uci delete dhcp.@dnsmasq[0].serversfile 2>/dev/null
-		uci commit dhcp	
+	# local serversfile=$(uci get dhcp.@dnsmasq[0].serversfile 2>/dev/null)
+	# if [ "${serversfile}" = "/etc/dnsforwarder/dnsmasq.conf" ]; then
+        # uci set dhcp.@dnsmasq[0].resolvfile=/tmp/resolv.conf.auto 2>/dev/null
+		# uci delete dhcp.@dnsmasq[0].noresolv 2>/dev/null
+		# uci delete dhcp.@dnsmasq[0].serversfile 2>/dev/null
+        # uci delete dhcp.@dnsmasq[0].server 2>/dev/null
+		# uci commit dhcp	
+		# /etc/init.d/dnsmasq restart
+    # fi
+	if [ -L /tmp/dnsmasq.d/dnsforwarder.conf ]; then
+		rm /tmp/dnsmasq.d/dnsforwarder.conf
 		/etc/init.d/dnsmasq restart
-    fi
+	fi
 }
 
 
