@@ -34,6 +34,16 @@ define Device/tplink_archer-c59-v1
 endef
 TARGET_DEVICES += tplink_archer-c59-v1
 
+define Device/tplink_archer-c6-v2
+  $(Device/tplink-safeloader-uimage)
+  ATH_SOC := qca9563
+  IMAGE_SIZE := 7808k
+  DEVICE_TITLE := TP-LINK Archer C6 v2
+  TPLINK_BOARD_ID := ARCHER-C6-V2
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
+endef
+TARGET_DEVICES += tplink_archer-c6-v2
+
 define Device/tplink_archer-c7-v1
   $(Device/tplink-8mlzma)
   ATH_SOC := qca9558
@@ -54,6 +64,18 @@ define Device/tplink_archer-c7-v2
   IMAGE/factory-eu.bin := append-rootfs | mktplinkfw factory -C EU
 endef
 TARGET_DEVICES += tplink_archer-c7-v2
+
+define Device/tplink_archer-c7-v5
+  $(Device/tplink-safeloader-uimage)
+  ATH_SOC := qca9563
+  IMAGE_SIZE := 15360k
+  DEVICE_TITLE := TP-LINK Archer C7 v5
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  TPLINK_BOARD_ID := ARCHER-C7-V5
+  BOARDNAME := ARCHER-C7-V5
+  SUPPORTED_DEVICES += archer-c7-v5
+endef
+TARGET_DEVICES += tplink_archer-c7-v5
 
 define Device/tplink_re450-v2
   $(Device/tplink)
@@ -110,6 +132,23 @@ define Device/tplink_tl-wr1043nd-v1
   SUPPORTED_DEVICES += tl-wr1043nd
 endef
 TARGET_DEVICES += tplink_tl-wr1043nd-v1
+
+define Device/tplink_tl-wr810n-v1
+  $(Device/tplink-8mlzma)
+  ATH_SOC := qca9531
+  DEVICE_TITLE := TP-LINK TL-WR810N v1
+  TPLINK_HWID := 0x8100001
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
+endef
+TARGET_DEVICES += tplink_tl-wr810n-v1
+
+define Device/tplink_tl-wr810n-v2
+  $(Device/tplink-8mlzma)
+  ATH_SOC := qca9533
+  DEVICE_TITLE := TP-LINK TL-WR810N v2
+  TPLINK_HWID := 0x8100002
+endef
+TARGET_DEVICES += tplink_tl-wr810n-v2
 
 define Device/tplink_tl-wr842n-v1
   $(Device/tplink-8m)
