@@ -657,7 +657,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
  		gfar_write(&regs->rstat, gfargrp->rstat);
 --- a/drivers/net/ethernet/freescale/ucc_geth.c
 +++ b/drivers/net/ethernet/freescale/ucc_geth.c
-@@ -3301,7 +3301,7 @@ static int ucc_geth_poll(struct napi_str
+@@ -3303,7 +3303,7 @@ static int ucc_geth_poll(struct napi_str
  		howmany += ucc_geth_rx(ugeth, i, budget - howmany);
  
  	if (howmany < budget) {
@@ -1040,7 +1040,7 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
  		writel(irq->mask, adpt->base + EMAC_INT_MASK);
 --- a/drivers/net/ethernet/realtek/r8169.c
 +++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -7576,7 +7576,7 @@ static int rtl8169_poll(struct napi_stru
+@@ -7578,7 +7578,7 @@ static int rtl8169_poll(struct napi_stru
  	}
  
  	if (work_done < budget) {
