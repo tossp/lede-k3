@@ -21,13 +21,13 @@ stages:
         - bin/
   script:
     - mkdir -p /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/{dl,feeds,build_dir,staging_dir}
-    # - make clean
+    - make clean
     # - ./scripts/feeds clean -a
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/dl dl
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/feeds feeds
-    - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
+    # - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/staging_dir staging_dir
     - ln -s /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build_dir build_dir
-    - cp /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/key-* ./
+    # - cp /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/key-* ./
     - sed -i "s/CI_COMMIT_SHA/$CI_COMMIT_SHA/g" ./package/ts/ts-settings/files/ts-default-settings
     - sed -i "s/COMMIT_SHA_VERSION/${CI_COMMIT_SHA:0:8}/g" ./package/ts/ts-settings/Makefile
     - ./scripts/feeds update -a
@@ -35,7 +35,7 @@ stages:
     - cp tsconfig .config
     - make defconfig
     - echo '' > /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt
-    - (make -j$(nproc) V=sc 2>&1 | tee /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt | grep -E -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt && exit 66)
+    - (make -j$(nproc) V=sc 2>&1 | tee /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt | grep -E -e "(curl|wget|git|svn)" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 /ts/$CI_PROJECT_PATH_SLUG-$CI_COMMIT_REF_SLUG/build.txt && exit 66)
     - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp .config bin/config.txt
