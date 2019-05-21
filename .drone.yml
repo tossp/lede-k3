@@ -2,9 +2,8 @@ kind: pipeline
 name: lede-K3
 
 clone:
-  git:
-    image: plugins/git
-    recursive: true
+  depth: 50
+  recursive: true
 
 steps:
 - name: 恢复缓存
