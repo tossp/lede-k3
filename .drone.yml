@@ -1,11 +1,11 @@
 kind: pipeline
-name: 默认流
+name: lede-K3
 
 steps:
 - name: 同步子项目
   image: docker:git
   commands:
-    - git submodule update --init --recursive --remote
+    - git submodule update --init --recursive
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
@@ -58,7 +58,6 @@ steps:
   volumes:
     - name: cache
       path: /tmp/cache
-
 
 volumes:
   - name: cache
