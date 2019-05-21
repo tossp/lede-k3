@@ -1,0 +1,15 @@
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: tossp/lede
+  commands:
+  - env
+  - ./scripts/feeds update -a
+  - ./scripts/feeds install -a
+  - cp tsconfig .config
+  - make defconfig
+  when:
+    branch:
+      - ci
