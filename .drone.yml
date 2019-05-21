@@ -1,7 +1,14 @@
 kind: pipeline
 name: 默认流
 
+clone:
+  depth: 50
+
 steps:
+- name: 同步子项目
+  image: docker:git
+  commands:
+    - git submodule update --recursive --remote
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
@@ -21,19 +28,19 @@ steps:
   image: tossp/lede
   commands:
   - env
-  - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}
-  - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt
+  - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build
+  - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt
   - sed -i "s/CI_COMMIT_SHA/$DRONE_COMMIT_SHA/g" ./package/ts/ts-settings/files/ts-default-settings
   - sed -i "s/COMMIT_SHA_VERSION/${DRONE_COMMIT_SHA:0:8}/g" ./package/ts/ts-settings/Makefile
   - ./scripts/feeds update -a
   - ./scripts/feeds install -a
   - cp tsconfig .config
   - make defconfig
-  - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt && exit 66)
+  - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 $${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
   - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
   - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
   - cp .config bin/config.txt
-  - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt bin/build.txt
+  - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
   - ls -la
   - ls -la bin
   when:
