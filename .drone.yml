@@ -1,9 +1,6 @@
 kind: pipeline
 name: 默认流
 
-clone:
-  depth: 50
-
 steps:
 - name: 同步子项目
   image: docker:git
