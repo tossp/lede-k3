@@ -5,6 +5,7 @@ steps:
 - name: 同步子项目
   image: docker:git
   commands:
+    - git submodule init
     - git submodule update --recursive --remote
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
