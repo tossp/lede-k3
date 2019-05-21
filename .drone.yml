@@ -1,15 +1,60 @@
 kind: pipeline
-name: default
+name: 默认流
 
 steps:
-- name: test
+- name: 恢复缓存
+  image: meltwater/drone-cache:dev
+  pull: true
+  settings:
+    backend: "filesystem"
+    restore: true
+    debug: true
+    cache_key: "volume"
+    archive_format: "gzip"
+    mount:
+      - 'dl'
+      - 'feeds'
+  volumes:
+    - name: cache
+      path: /tmp/cache
+- name: 编译
   image: tossp/lede
   commands:
   - env
+  - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}
+  - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt
+  - sed -i "s/CI_COMMIT_SHA/$DRONE_COMMIT_SHA/g" ./package/ts/ts-settings/files/ts-default-settings
+  - sed -i "s/COMMIT_SHA_VERSION/${DRONE_COMMIT_SHA:0:8}/g" ./package/ts/ts-settings/Makefile
   - ./scripts/feeds update -a
   - ./scripts/feeds install -a
   - cp tsconfig .config
   - make defconfig
+  - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt && exit 66)
+  - cp bin/targets/bcm53xx/generic/config.seed bin/targets/bcm53xx/generic/config.seed.txt
+  - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
+  - cp .config bin/config.txt
+  - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME_build}/build.txt bin/build.txt
+  - ls -la
+  - ls -la bin
   when:
     branch:
       - ci
+- name: 重建缓存
+  image: meltwater/drone-cache:dev
+  pull: true
+  settings:
+    backend: "filesystem"
+    rebuild: true
+    debug: true
+    cache_key: "volume"
+    archive_format: "gzip"
+    mount:
+      - 'dl'
+      - 'feeds'
+  volumes:
+    - name: cache
+      path: /tmp/cache
+
+volumes:
+  - name: cache
+    temp: {}
