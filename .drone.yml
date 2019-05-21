@@ -1,11 +1,12 @@
 kind: pipeline
 name: lede-K3
 
+clone:
+  git:
+    image: plugins/git
+    recursive: true
+
 steps:
-- name: 同步子项目
-  image: docker:git
-  commands:
-    - git submodule update --init --recursive
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
