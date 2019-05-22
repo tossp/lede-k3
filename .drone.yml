@@ -81,7 +81,7 @@ steps:
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
     - sed -i "s/CI_COMMIT_SHA/${DRONE_COMMIT_SHA}/g" bin/index.html
-    - sed -i "s/CI_RUNNER_DESCRIPTION/${DRONE_RUNNER_HOST}/g" 
+    - sed -i "s/CI_RUNNER_DESCRIPTION/${DRONE_RUNNER_HOST}/g" bin/index.html
     - sed -i "s/CI_RUNNER_TAGS/${DRONE_COMMIT_AUTHOR_NAME}/g" bin/index.html
     - sed -i "s/CI_BUILD_TIME/$TSTIME/g" bin/index.html
     - mkdir -p ${DRONE_COMMIT_SHA}
