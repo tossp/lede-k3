@@ -2,6 +2,17 @@ kind: pipeline
 name: lede-K3
 
 steps:
+- name: 同步子项目
+  image: tossp/lede
+  environment:
+    TS_GIT_TOKEN:
+      from_secret: TS_GIT_TOKEN
+  commands:
+    - env
+    - git config --global credential.helper store
+    - echo "${TS_GIT_TOKEN}" >> ${HOME}/.git-credentials
+    - git submodule update --init --recursive
+    - ls -la ./package/ts
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
@@ -20,7 +31,6 @@ steps:
 - name: 编译
   image: tossp/lede
   commands:
-    - git submodule update --init --recursive
     - env
     - ls -la
     - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build
