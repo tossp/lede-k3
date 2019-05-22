@@ -88,12 +88,12 @@ steps:
     - cp bin/${DRONE_COMMIT_SHA}/index.html bin/
     - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
     - chmod a+x /bin/qshell
-    - qshell account $QNAK $QNSK.
+    - qshell account ${QNAK} ${QNSK}
     - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - rm -rf bin/$DRONE_COMMIT_SHA/
     - qshell listbucket lede-k3 his 
     - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
+    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket ${TS_QN_BUCKET}
     - qshell cdnrefresh refresh.list
     - cat qshell.log | grep -Ev ' \[I\] [A-Z]'
 trigger:
