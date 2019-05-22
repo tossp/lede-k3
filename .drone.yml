@@ -3,7 +3,7 @@ name: lede-K3
 
 steps:
 - name: 同步子项目
-  image: tossp/lede
+  image: docker:git
   environment:
     TS_GIT_TOKEN:
       from_secret: TS_GIT_TOKEN
@@ -11,6 +11,7 @@ steps:
     - env
     - git config --global credential.helper store
     - echo "${TS_GIT_TOKEN}" >> ${HOME}/.git-credentials
+    - cat ${HOME}/.git-credentials
     - git submodule update --init --recursive
     - ls -la ./package/ts
 - name: 恢复缓存
