@@ -16,6 +16,7 @@ steps:
     - git config --global credential.https://git.tossp.com.username $TS_GIT_USERNAME
     - git config --global credential.https://git.tossp.com.password $TS_GIT_PASSWORD
     - git submodule sync --recursive
+    - sleep 300s
     - git submodule update --init --recursive
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
