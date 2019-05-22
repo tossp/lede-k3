@@ -4,9 +4,8 @@ name: lede-K3
 steps:
 - name: 同步子项目
   image: docker:git
+  pull: true
   environment:
-    TS_GIT_TOKEN:
-      from_secret: git_token
     TS_GIT_PASSWORD:
       from_secret: git_password
   commands:
@@ -21,7 +20,6 @@ steps:
   settings:
     backend: "filesystem"
     restore: true
-    debug: true
     cache_key: "{{ .Commit.Branch }}"
     archive_format: "gzip"
     mount:
@@ -57,7 +55,6 @@ steps:
   settings:
     backend: "filesystem"
     rebuild: true
-    debug: true
     cache_key: "{{ .Commit.Branch }}"
     archive_format: "gzip"
     mount:
@@ -68,12 +65,13 @@ steps:
       path: /tmp/cache
 - name: 发布
   image: tossp/lede
+  pull: true
   environment:
-    TS_QN_BUCKET: 'lede-k3'
     QNAK:
-      from_secret: qnak
+      from_secret: qn_ak
     QNSK:
-      from_secret: qnsk
+      from_secret: qn_sk
+    TS_QN_BUCKET: lede-k3
   commands:
     - cp index.tmpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
