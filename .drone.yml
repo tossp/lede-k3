@@ -9,12 +9,8 @@ steps:
       from_secret: git_token
   commands:
     - env
-    - echo "${TS_GIT_TOKEN}"
-    - git config --global credential.helper store
-    - echo "${TS_GIT_TOKEN}" >> ${HOME}/.git-credentials
-    - cat ${HOME}/.git-credentials
+    - git submodule sync --recursive
     - git submodule update --init --recursive
-    - ls -la ./package/ts
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
