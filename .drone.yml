@@ -71,7 +71,6 @@ steps:
       from_secret: qn_ak
     QNSK:
       from_secret: qn_sk
-    TS_QN_BUCKET: lede-k3
   commands:
     - cp index.tmpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
@@ -91,7 +90,7 @@ steps:
     - rm -rf bin/$DRONE_COMMIT_SHA/
     - qshell listbucket lede-k3 his 
     - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket ${TS_QN_BUCKET}
+    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
     - qshell cdnrefresh refresh.list
     - cat qshell.log | grep -Ev ' \[I\] [A-Z]'
 trigger:
