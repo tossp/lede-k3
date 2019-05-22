@@ -6,9 +6,10 @@ steps:
   image: docker:git
   environment:
     TS_GIT_TOKEN:
-      from_secret: TS_GIT_TOKEN
+      from_secret: git_token
   commands:
     - env
+    - echo "${TS_GIT_TOKEN}"
     - git config --global credential.helper store
     - echo "${TS_GIT_TOKEN}" >> ${HOME}/.git-credentials
     - cat ${HOME}/.git-credentials
