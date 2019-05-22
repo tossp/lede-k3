@@ -101,4 +101,5 @@ steps:
 
 volumes:
   - name: cache
-    temp: {}
+    host:
+      path: /root/ts/compose/ci/storage/cache
