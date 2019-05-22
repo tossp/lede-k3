@@ -98,7 +98,9 @@ steps:
     - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket $TS_QN_BUCKET
     - qshell cdnrefresh refresh.list
     - cat qshell.log | grep -Ev ' \[I\] [A-Z]'
-
+trigger:
+  branch:
+  - ci
 volumes:
   - name: cache
     host:
