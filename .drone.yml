@@ -7,8 +7,14 @@ steps:
   environment:
     TS_GIT_TOKEN:
       from_secret: git_token
+    TS_GIT_USERNAME:
+      from_secret: git_username
+    TS_GIT_PASSWORD:
+      from_secret: git_password
   commands:
     - env
+    - git config --global credential.https://git.tossp.com.username $TS_GIT_USERNAME
+    - git config --global credential.https://git.tossp.com.password $TS_GIT_PASSWORD
     - git submodule sync --recursive
     - git submodule update --init --recursive
 - name: 恢复缓存
