@@ -85,8 +85,7 @@ steps:
     - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
     - chmod a+x /bin/qshell
     - echo $QN_AK $QN_SK
-    - qshell account $QN_AK $QN_SK
-    - sleep 3600
+    - qshell account $QN_AK $QN_SK    
     - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
     - rm -rf bin/$DRONE_COMMIT_SHA/
     - qshell listbucket lede-k3 his 
