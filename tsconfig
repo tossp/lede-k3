@@ -51,7 +51,7 @@ CONFIG_PACKAGE_ebtables-utils=m
 CONFIG_PACKAGE_ts-settings=y
 CONFIG_PACKAGE_luci-app-dnsforwarder=m
 
-# for ssr-plus
+CONFIG_PACKAGE_luci-app-clash=y
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks=y
 CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_V2ray=y
