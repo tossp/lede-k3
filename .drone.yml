@@ -42,7 +42,7 @@ steps:
     - cp tsconfig .config
     - make defconfig
     - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
-    - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
+    #- cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
     - cp .config bin/config.txt
     - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
   when:
