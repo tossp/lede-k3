@@ -70,7 +70,7 @@ steps:
     QN_SK:
       from_secret: qn_sk
   commands:
-    - cp index.tmpl bin/index.html
+    - cp index.tpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
     - sed -i "s/CI_COMMIT_SHA/${DRONE_COMMIT_SHA}/g" bin/index.html
