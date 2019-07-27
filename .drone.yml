@@ -11,6 +11,7 @@ steps:
   settings:
     backend: "filesystem"
     restore: true
+    debug: true
     cache_key: "{{ .Commit.Branch }}"
     archive_format: "gzip"
     mount:
@@ -26,7 +27,6 @@ steps:
     FORCE_UNSAFE_CONFIGURE: 1
     GOPROXY: https://mirrors.aliyun.com/goproxy/
   commands:
-    - apt-get -qqy install python-dev python3-dev
     - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build
     - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt
     - sed -i "s/CI_COMMIT_SHA/${DRONE_COMMIT_SHA}/g" ./package/ts/default-settings/files/zzz-default-settings
@@ -34,9 +34,6 @@ steps:
     - ./scripts/feeds update -a && ./scripts/feeds install -a
     - cp k3.config .config && make defconfig
     - make -j1 V=1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt
-    - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
-    - cp .config bin/config.txt
-    - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
     - rm -rf build_dir/target-arm_cortex-a9_musl_eabi
   when:
     branch:
@@ -64,6 +61,9 @@ steps:
     QN_SK:
       from_secret: qn_sk
   commands:
+    - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
+    - cp .config bin/config.txt
+    - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp index.tpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
