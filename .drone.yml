@@ -13,8 +13,8 @@ steps:
     mount:
       - 'dl'
       - 'feeds'
-      - 'build_dir'
-      - 'staging_dir'
+      # - 'build_dir'
+      # - 'staging_dir'
   volumes:
     - name: cache
       path: /tmp/cache
@@ -31,7 +31,7 @@ steps:
     - sed -i "s/COMMIT_SHA_VERSION/${DRONE_COMMIT_SHA:0:8}/g" ./package/ts/default-settings/Makefile
     - ./scripts/feeds update -a && ./scripts/feeds install -a
     - cp k3.config .config && make defconfig
-    - make -j$(nproc) V=1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt
+    - (make -j4 V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "time.+(#[\.0-9]+){3}" -e 'make\[[0-9]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
     - rm -rf build_dir/target-arm_cortex-a9_musl_eabi staging_dir/target-arm_cortex-a9_musl_eabi
   when:
     branch:
