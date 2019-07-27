@@ -2,18 +2,6 @@ kind: pipeline
 name: lede-K3
 
 steps:
-- name: 同步子项目
-  image: docker:git
-  pull: true
-  environment:
-    TS_GIT_PASSWORD:
-      from_secret: git_password
-  commands:
-    - git config --global credential.https://git.tossp.com.username ts
-    - git config --global credential.helper store
-    - echo "https://ts:$TS_GIT_PASSWORD@git.tossp.com" >> ~/.git-credentials
-    - git submodule sync --recursive
-    - git submodule update --init --recursive
 - name: 恢复缓存
   image: meltwater/drone-cache:dev
   pull: true
@@ -25,11 +13,13 @@ steps:
     mount:
       - 'dl'
       - 'feeds'
+      - 'build_dir'
   volumes:
     - name: cache
       path: /tmp/cache
 - name: 编译构建
   image: tossp/lede
+  pull: true
   environment:
     FORCE_UNSAFE_CONFIGURE: 1
     GOPROXY: https://mirrors.aliyun.com/goproxy/
@@ -39,11 +29,12 @@ steps:
     - sed -i "s/CI_COMMIT_SHA/${DRONE_COMMIT_SHA}/g" ./package/ts/ts-settings/files/ts-default-settings
     - sed -i "s/COMMIT_SHA_VERSION/${DRONE_COMMIT_SHA:0:8}/g" ./package/ts/ts-settings/Makefile
     - ./scripts/feeds update -a && ./scripts/feeds install -a
-    - cp tsconfig .config && make defconfig
-    - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
-    #- cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
+    - cp k3.config .config && make defconfig
+    - (make -j$(nproc) V=1 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
+    - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
     - cp .config bin/config.txt
     - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
+    - rm -rf build_dir/target-arm_cortex-a9_musl_eabi/root-bcm53xx
   when:
     branch:
       - ci
@@ -58,6 +49,7 @@ steps:
     mount:
       - 'dl'
       - 'feeds'
+      - 'build_dir'
   volumes:
     - name: cache
       path: /tmp/cache
@@ -84,16 +76,16 @@ steps:
     - chmod a+x /bin/qshell
     - echo $QN_AK $QN_SK
     - qshell account $QN_AK $QN_SK
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
+    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count $(nproc) -src-dir bin -bucket lede-k3
     - rm -rf bin/${DRONE_COMMIT_SHA}/
     - qshell listbucket lede-k3 his
-    - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
+    - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\",\"src\":\"openwrt\",\"target\":\"k3\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
     - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
     - qshell cdnrefresh refresh.list
     - cat qshell.log | grep -Ev ' \[I\] [A-Z]'
 trigger:
   branch:
-  - ci
+  - ci1
 volumes:
   - name: cache
     host:
