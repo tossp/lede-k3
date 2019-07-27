@@ -89,8 +89,8 @@
 </head>
 
 <body>
-    <a href="https://github.com/tossp/lede-k3/commits/ci1">🏳️‍🌈‍<img alt="持续集成状态"
-            src="https://ci.tossp.com/api/badges/ts/lede-k3/status.svg?ref=refs/heads/ci1"></a><br>
+    <a href="https://github.com/tossp/lede-k3/commits/ci">🏳️‍🌈‍<img alt="持续集成状态"
+            src="https://ci.tossp.com/api/badges/ts/lede-k3/status.svg?ref=refs/heads/ci"></a><br>
     <hr>
     <h1>📢广告</h1>
     <div id="cyReward" role="cylabs" data-use="reward" sid="CI_COMMIT_SHA"></div>
@@ -198,8 +198,8 @@ src/gz ts_k3_routing http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_co
     </table>
     <hr>
     <h1>🌏项目说明</h1>
-    编译源码📜 <a href="https://github.com/tossp/lede-k3/commits/ci1"
-        target="_blank">https://github.com/tossp/lede-k3/commits/ci1</a><br>
+    编译源码📜 <a href="https://github.com/tossp/lede-k3/commits/ci"
+        target="_blank">https://github.com/tossp/lede-k3/commits/ci</a><br>
     引用项目📦 <a href="https://github.com/openwrt/openwrt" target="_blank">https://github.com/openwrt/openwrt</a><br>
     <div id="SOHUCS" sid="CI_COMMIT_SHA"></div>
     <script src="//cdn.bootcss.com/babel-polyfill/7.0.0/polyfill.min.js"></script>
@@ -249,7 +249,7 @@ src/gz ts_k3_routing http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_co
             }
 
             function getCommits(cb, author) {
-                getjson(cb, "https://api.github.com/repos/tossp/lede-k3/commits?sha=ci1&author=" + author)
+                getjson(cb, "https://api.github.com/repos/tossp/lede-k3/commits?sha=ci&author=" + author)
             }
 
             function getHistory(cb) {
