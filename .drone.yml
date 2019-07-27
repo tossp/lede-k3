@@ -15,8 +15,8 @@ steps:
     archive_format: "gzip"
     mount:
       - 'dl'
-    #   - 'feeds'
-    #   - 'build_dir'
+      - 'feeds'
+      - 'build_dir'
   volumes:
     - name: cache
       path: /tmp/cache
