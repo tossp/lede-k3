@@ -8,8 +8,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=default-settings
 PKG_VERSION:=1.0.0
-PKG_RELEASE:=42
+PKG_RELEASE:=COMMIT_SHA_VERSION
 PKG_LICENSE:=GPLv3
+PKG_MAINTAINER:=Dennis <openwrt@tossp.com>
 PKG_LICENSE_FILES:=LICENSE
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
@@ -43,7 +44,7 @@ define Package/default-settings/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/*.lmo $(1)/usr/lib/lua/luci/i18n/
-	$(INSTALL_BIN) ./files/zzz-default-settings $(1)/etc/uci-defaults/99-default-settings
+	$(INSTALL_BIN) ./files/zzz-default-settings $(1)/etc/uci-defaults/99-ts-default-settings
 endef
 
 $(eval $(call BuildPackage,default-settings))

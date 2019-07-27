@@ -3,6 +3,7 @@
 uci set luci.main.lang=zh_cn
 uci commit luci
 
+uci set system.@system[0].hostname=tsk3
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
 uci commit system
@@ -13,7 +14,7 @@ uci commit fstab
 
 uci set minidlna.config.enabled=0
 uci commit minidlna
-/etc/init.d/minidlna enable
+/etc/init.d/minidlna disable
 /etc/init.d/minidlna stop
 
 ln -sf /sbin/ip /usr/bin/ip
@@ -21,8 +22,13 @@ ln -sf /sbin/ip /usr/bin/ip
 sed -i 's/downloads.openwrt.org/openwrt.proxy.ustclug.org/g' /etc/opkg/distfeeds.conf
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
 sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' /etc/shadow
-
 sed -i "s/# //g" /etc/opkg/distfeeds.conf
+opkg_items_version='CI_COMMIT_SHA'
+sed -i '/tossp_k3_/d' /etc/opkg/distfeeds.conf
+echo "src/gz tossp_k3_core http://lede-k3.test.tossp.com/${opkg_items_version}/targets/bcm53xx/generic/packages" >> /etc/opkg/distfeeds.conf
+opkg_items="base luci packages routing custom"
+for item in ${opkg_items}; do echo "src/gz tossp_k3_${item} http://lede-k3.test.tossp.com/${opkg_items_version}/packages/arm_cortex-a9/${item}" >> /etc/opkg/distfeeds.conf; done
+
 
 uci set dhcp.lan.ra='server'
 uci set dhcp.lan.dhcpv6='server'
@@ -44,5 +50,10 @@ echo "log-facility=/dev/null" >> /etc/dnsmasq.conf
 
 rm -rf /tmp/luci-modulecache/
 rm -f /tmp/luci-indexcache
+
+sed -i '/DISTRIB_TOSSP_COM/d' /etc/openwrt_release
+echo "DISTRIB_TOSSP_COM_REVISION='CI_COMMIT_SHA'" >> /etc/openwrt_release
+echo "REVISION='CI_COMMIT_SHA'" > /etc/ts_release
+chmod -R a+r,a+X /www
 
 exit 0
