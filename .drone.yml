@@ -13,8 +13,8 @@ steps:
     restore: true
     cache_key: "{{ .Commit.Branch }}"
     archive_format: "gzip"
-    # mount:
-    #   - 'dl'
+    mount:
+      - 'dl'
     #   - 'feeds'
     #   - 'build_dir'
   volumes:
