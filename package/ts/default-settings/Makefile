@@ -44,7 +44,7 @@ define Package/default-settings/install
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci/i18n
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DATA) $(PKG_BUILD_DIR)/*.lmo $(1)/usr/lib/lua/luci/i18n/
-	$(INSTALL_BIN) ./files/zzz-default-settings $(1)/etc/uci-defaults/99-ts-default-settings
+	$(INSTALL_BIN) ./files/zzz-default-settings $(1)/etc/uci-defaults/zzz-default-settings-ts
 endef
 
 $(eval $(call BuildPackage,default-settings))
