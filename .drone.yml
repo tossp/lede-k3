@@ -96,6 +96,7 @@ volumes:
 
 ---
 kind: pipeline
+name: sc-success
 
 steps:
 - name: 发布成功
@@ -114,6 +115,7 @@ depends_on:
 
 ---
 kind: pipeline
+name: sc-failure
 
 steps:
 - name: 发布失败
