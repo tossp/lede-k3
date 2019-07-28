@@ -16,7 +16,7 @@ steps:
   volumes:
     - name: cache
       path: /tmp/cache
-- name: 预编译
+- name: 编译构建
   image: tossp/lede
   pull: true
   environment:
