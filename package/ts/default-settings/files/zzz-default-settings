@@ -19,10 +19,12 @@ uci commit minidlna
 
 ln -sf /sbin/ip /usr/bin/ip
 
+sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' /etc/shadow
+
+sed -i '/openwrt_custom/d' /etc/opkg/distfeeds.conf
 sed -i 's/downloads.openwrt.org/openwrt.proxy.ustclug.org/g' /etc/opkg/distfeeds.conf
 sed -i 's/http/https/g' /etc/opkg/distfeeds.conf
-sed -i 's/root::0:0:99999:7:::/root:$1$V4UetPzk$CYXluq4wUazHjmCDBCqXF.:0:0:99999:7:::/g' /etc/shadow
-sed -i "s/# //g" /etc/opkg/distfeeds.conf
+# sed -i "s/# //g" /etc/opkg/distfeeds.conf
 opkg_items_version='CI_COMMIT_SHA'
 sed -i '/tossp_k3_/d' /etc/opkg/distfeeds.conf
 echo "src/gz tossp_k3_core http://lede-k3.test.tossp.com/${opkg_items_version}/targets/bcm53xx/generic/packages" >> /etc/opkg/distfeeds.conf
