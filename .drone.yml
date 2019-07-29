@@ -60,7 +60,7 @@ steps:
     - chmod a+x /bin/qshell
     - echo $QN_AK $QN_SK
     - qshell account $QN_AK $QN_SK
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -src-dir ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build -bucket lede-k3
+    - qshell qupload2 -log-file qshell.log -overwrite -thread-count 4 -src-dir ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build -bucket lede-k3
     - cp ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/${DRONE_COMMIT_SHA}.build.txt bin/build.txt
     - cp .config bin/config.txt
     - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
@@ -75,7 +75,7 @@ steps:
     - mv -f bin/* ${DRONE_COMMIT_SHA}
     - mv -f ${DRONE_COMMIT_SHA} bin/
     - cp bin/${DRONE_COMMIT_SHA}/index.html bin/
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count $(nproc) -src-dir bin -bucket lede-k3
+    - qshell qupload2 -log-file qshell.log -overwrite -thread-count 4 -src-dir bin -bucket lede-k3
     - rm -rf bin/${DRONE_COMMIT_SHA}/
     - qshell listbucket lede-k3 his
     - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\",\"src\":\"openwrt\",\"target\":\"k3\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
