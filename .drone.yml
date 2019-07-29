@@ -1,5 +1,5 @@
 kind: pipeline
-name: lede-K3
+name: 编译发布
 
 steps:
 - name: 同步子项目
@@ -30,23 +30,22 @@ steps:
       path: /tmp/cache
 - name: 编译构建
   image: tossp/lede
+  pull: true
   environment:
     FORCE_UNSAFE_CONFIGURE: 1
     GOPROXY: https://mirrors.aliyun.com/goproxy/
   commands:
     - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build
-    - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt
+    - echo '' > ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/${DRONE_COMMIT_SHA}.build.txt
     - sed -i "s/CI_COMMIT_SHA/${DRONE_COMMIT_SHA}/g" ./package/ts/ts-settings/files/ts-default-settings
     - sed -i "s/COMMIT_SHA_VERSION/${DRONE_COMMIT_SHA:0:8}/g" ./package/ts/ts-settings/Makefile
     - ./scripts/feeds update -a && ./scripts/feeds install -a
-    - cp tsconfig .config && make defconfig
-    - (make -j$(nproc) V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt | grep -E -e "(curl |wget |git |svn )" -e "time.+(#[\.0-9]+){3}" -e 'make\[[1-3]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt && exit 66)
-    #- cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt 2>&1
-    - cp .config bin/config.txt
-    - mv ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/build.txt bin/build.txt
+    - cp k3.config .config && make defconfig
+    - (make -j4 V=sc 2>&1 | tee ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/${DRONE_COMMIT_SHA}.build.txt | grep -E -e "time.+(#[\.0-9]+){3}" -e 'make\[[0-9]\].{2}(Leav|Enter)ing directory.+') || (grep -P 'Error \d+\b(?! \(ignored\))' -C5 ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/${DRONE_COMMIT_SHA}.build.txt && exit 66)
+    - rm -rf build_dir/target-arm_cortex-a9_musl_eabi staging_dir/target-arm_cortex-a9_musl_eabi
   when:
     branch:
-      - ci
+      - lean
 - name: 重建缓存
   image: meltwater/drone-cache:dev
   pull: true
@@ -69,6 +68,14 @@ steps:
     QN_SK:
       from_secret: qn_sk
   commands:
+    - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
+    - chmod a+x /bin/qshell
+    - echo $QN_AK $QN_SK
+    - qshell account $QN_AK $QN_SK
+    - qshell qupload2 -log-file qshell.log -overwrite -thread-count 4 -src-dir ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build -bucket lede-k3
+    - cp ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build/${DRONE_COMMIT_SHA}.build.txt bin/build.txt
+    - cp .config bin/config.txt
+    - cp bin/targets/bcm53xx/generic/sha256sums bin/targets/bcm53xx/generic/sha256sums.txt
     - cp index.tpl bin/index.html
     - tree -L 5 bin/ > bin/tree.txt
     - TSTIME=`date '+%Y-%m-%d %H:%M:%S' -d '8 hours'`
@@ -80,21 +87,18 @@ steps:
     - mv -f bin/* ${DRONE_COMMIT_SHA}
     - mv -f ${DRONE_COMMIT_SHA} bin/
     - cp bin/${DRONE_COMMIT_SHA}/index.html bin/
-    - wget -O /bin/qshell http://devtools.qiniu.com/2.1.5/qshell-linux-x64
-    - chmod a+x /bin/qshell
-    - echo $QN_AK $QN_SK
-    - qshell account $QN_AK $QN_SK
-    - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
+    - qshell qupload2 -log-file qshell.log -overwrite -thread-count 4 -src-dir bin -bucket lede-k3
     - rm -rf bin/${DRONE_COMMIT_SHA}/
     - qshell listbucket lede-k3 his
-    - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
+    - grep '/index.html' his | sort -k4 -r | awk 'BEGIN{FS="[/\t]"} {print "{\"id\":\""$1"\",\"time\":\""$5"\",\"src\":\"openwrt\",\"target\":\"k3\"}\n,"}' | sed -e '1i [' -e '$c ]' > bin/history.json
     - qshell qupload2 -log-file qshell.log -check-exists -check-hash -check-size -overwrite -rescan-local -thread-count 6 -src-dir bin -bucket lede-k3
     - qshell cdnrefresh refresh.list
     - cat qshell.log | grep -Ev ' \[I\] [A-Z]'
 trigger:
   branch:
-  - ci
+  - lean
 volumes:
   - name: cache
     host:
       path: /root/ts/compose/drone/cache
+
