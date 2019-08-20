@@ -32,7 +32,7 @@ steps:
   image: tossp/lede
   pull: true
   environment:
-    FORCE_UNSAFE_CONFIGURE: 1
+    FORCE_UNSAFE_CONFIGURE: "1"
     GOPROXY: https://mirrors.aliyun.com/goproxy/
   commands:
     - mkdir -p ${DRONE_REPO_OWNER}_${DRONE_REPO_NAME}_build
