@@ -90,7 +90,7 @@
 
 <body>
     <a href="https://github.com/tossp/lede-k3/commits/ci">🏳️‍🌈‍<img alt="持续集成状态"
-            src="https://ci.tossp.com/api/badges/ts/lede-k3/status.svg?ref=refs/heads/ci"></a><br>
+            src="https://ci.tossp.com/api/badges/ts/lede-k3/status.svg?ref=refs/heads/lean"></a><br>
     <hr>
     <h1>📢广告</h1>
     <div id="cyReward" role="cylabs" data-use="reward" sid="CI_COMMIT_SHA"></div>
@@ -248,7 +248,7 @@ src/gz ts_k3_routing http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_co
             }
 
             function getCommits(cb, author) {
-                getjson(cb, "https://api.github.com/repos/tossp/lede-k3/commits?sha=ci&author=" + author)
+                getjson(cb, "https://api.github.com/repos/tossp/lede-k3/commits?sha=CI_COMMIT_SHA&author=" + author)
             }
 
             function getHistory(cb) {
