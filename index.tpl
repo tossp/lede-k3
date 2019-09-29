@@ -89,7 +89,7 @@
 </head>
 
 <body>
-    <a href="https://github.com/tossp/lede-k3/commits/ci">🏳️‍🌈‍<img alt="持续集成状态"
+    <a href="https://github.com/tossp/lede-k3/commits/lean">🏳️‍🌈‍<img alt="持续集成状态"
             src="https://ci.tossp.com/api/badges/ts/lede-k3/status.svg?ref=refs/heads/lean"></a><br>
     <hr>
     <h1>📢广告</h1>
@@ -194,8 +194,8 @@ src/gz ts_k3_routing http://lede-k3.test.tossp.com/CI_COMMIT_SHA/packages/arm_co
     </table>
     <hr>
     <h1>🌏项目说明</h1>
-    编译源码📜 <a href="https://github.com/tossp/lede-k3/commits/ci"
-        target="_blank">https://github.com/tossp/lede-k3/commits/ci</a><br>
+    编译源码📜 <a href="https://github.com/tossp/lede-k3/commits/lean"
+        target="_blank">https://github.com/tossp/lede-k3/commits/lean</a><br>
     引用项目📦 <a href="https://github.com/coolsnowwolf/lede" target="_blank">https://github.com/coolsnowwolf/lede</a><br>
     关键变更📝 <a
         href="https://github.com/tossp/lede-k3/commit/903513a315c9d202bc6c809ea0fcbc4b51df3dce#diff-0b8f8fc77bb0569fab1d87be78ee78ec"
