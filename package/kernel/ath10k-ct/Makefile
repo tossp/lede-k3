@@ -1,21 +1,21 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ath10k-ct
-PKG_RELEASE=1
+PKG_RELEASE=2
 
 PKG_LICENSE:=GPLv2
 PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/greearb/ath10k-ct.git
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2019-05-08
-PKG_SOURCE_VERSION:=f98b6dc4d27ea2d79a1577285d1d5cb0641b3eb4
-PKG_MIRROR_HASH:=ca2f0e9da25fc7140d26ddeeb8e929e172755aa0e41e4e92e5b87bb972b8ed41
+PKG_SOURCE_DATE:=2020-10-08
+PKG_SOURCE_VERSION:=1d28d176e5b6e63a6583f497adf68e1d9c1dc962
+PKG_MIRROR_HASH:=f611762647822742f7c8f9da242e33d9bf6da0a14976b87408af28f280802ae0
 
-# Build the 4.19 ath10k-ct driver version.  Other options are "-4.16", or
-# leave un-defined for 4.7 kernel.  Probably this should match as closely as
+# Build the 5.8 ath10k-ct driver version.
+# Probably this should match as closely as
 # possible to whatever mac80211 backports version is being used.
-CT_KVER="-4.19"
+CT_KVER="-5.8"
 
 PKG_MAINTAINER:=Ben Greear <greearb@candelatech.com>
 PKG_BUILD_PARALLEL:=1
@@ -35,6 +35,7 @@ define KernelPackage/ath10k-ct
 	$(PKG_BUILD_DIR)/ath10k$(CT_KVER)/ath10k_core.ko
   AUTOLOAD:=$(call AutoProbe,ath10k_pci)
   PROVIDES:=kmod-ath10k
+  VARIANT:=regular
 endef
 
 define KernelPackage/ath10k-ct/config
@@ -42,7 +43,13 @@ define KernelPackage/ath10k-ct/config
        config ATH10K-CT_LEDS
                bool "Enable LED support"
                default y
-               depends on PACKAGE_kmod-ath10k-ct
+               depends on PACKAGE_kmod-ath10k-ct || PACKAGE_kmod-ath10k-ct-smallbuffers
+endef
+
+define KernelPackage/ath10k-ct-smallbuffers
+$(call KernelPackage/ath10k-ct)
+  TITLE+= (small buffers for low-RAM devices)
+  VARIANT:=smallbuffers
 endef
 
 NOSTDINC_FLAGS = \
@@ -90,6 +97,10 @@ ifeq ($(CONFIG_ATH10K-CT_LEDS),y)
   NOSTDINC_FLAGS += -DCONFIG_ATH10K_LEDS
 endif
 
+ifeq ($(BUILD_VARIANT),smallbuffers)
+  NOSTDINC_FLAGS += -DCONFIG_ATH10K_SMALLBUFFERS
+endif
+
 define Build/Configure
 	cp $(STAGING_DIR)/usr/include/mac80211/ath/*.h $(PKG_BUILD_DIR)
 endef
@@ -101,9 +112,10 @@ endif
 define Build/Compile
 	+$(MAKE) $(CT_MAKEDEFS) $(PKG_JOBS) -C "$(LINUX_DIR)" \
 		$(KERNEL_MAKE_FLAGS) \
-		SUBDIRS="$(PKG_BUILD_DIR)/ath10k$(CT_KVER)" \
+		M="$(PKG_BUILD_DIR)/ath10k$(CT_KVER)" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
 		modules
 endef
 
 $(eval $(call KernelPackage,ath10k-ct))
+$(eval $(call KernelPackage,ath10k-ct-smallbuffers))
